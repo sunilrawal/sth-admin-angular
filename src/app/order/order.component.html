@@ -1,0 +1,74 @@
+<div *ngIf="order">
+
+  <div class="row">
+    <div class="col-2"></div>
+    <div class="col-8">
+      <div class="panel panel-primary border">
+        <div class="panel-heading"><h2>Order Details</h2></div>
+        <div class="panel-body">
+
+          <div class="row">
+            <div class="col-6">
+              <div><p class="font-weight-bold">Order ID</p></div>
+            </div>
+            <div class="col-6">
+              <div><p class='text-left'>{{ order.order_id }}</p></div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-6">
+              <div><p class="font-weight-bold">Details</p></div>
+            </div>
+            <div class="col-6">
+              <div class='text-left'>{{ order.name }}</div>
+              <div class='text-left'>{{ order.pickup_store.address }}</div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-6">
+              <div><p class="font-weight-bold">Email</p></div>
+            </div>
+            <div class="col-6">
+              <div><p class='text-left'>{{ order.email }}</p></div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-6">
+              <div><p class="font-weight-bold">Amount</p></div>
+            </div>
+            <div class="col-6">
+              <div><p class='text-left'>${{ order.amount }}</p></div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-6">
+              <div><p class="font-weight-bold">Product</p></div>
+            </div>
+            <div class="col-6">
+              <div><p class='text-left'>{{ order.products }}</p></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <div class="col-2"></div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="panel panel-primary">
+        <div class="panel-body">
+          <span class="order-image" *ngFor="let image of order.getImages()">
+            <a target="_" href="{{ image.url }}"><img src="{{ image.url }}" width="200"></a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
