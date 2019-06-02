@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DatabaseService } from '../services/database.service';
 import { StatsService } from '../services/stats.service';
+import { timer } from 'rxjs'
 
 @Component({
   selector: 'app-dashboard',
@@ -18,7 +19,8 @@ export class DashboardComponent implements OnInit {
   ) { 
     this.orders = this.db.getOrders();
     this.stats = this.statsService.getStats();
-    this.refreshData();
+
+    timer(0, 60000).subscribe(() => this.refreshData());
   }
 
   ngOnInit() {
@@ -32,5 +34,6 @@ export class DashboardComponent implements OnInit {
       this.statsService.setStats(stats);
       this.stats = this.statsService.getStats();
     });
+    console.log('refreshData');
   }
 }
