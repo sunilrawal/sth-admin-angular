@@ -24,11 +24,11 @@ router-outlet + *  {
 /* Text */
 
 h1 {
-  font-size: 32px;
+  font-size: 32px !important;
 }
 
 h2 {
-  font-size: 18px;
+  font-size: 3vw !important;
 }
 
 h3 {
@@ -87,4 +87,8 @@ app-top-bar h1 {
 
 .panel-primary .panel-footer {
   background-color: #F6F6F6 !important;
+}
+
+.thumb {
+  width: 14vw;
 }

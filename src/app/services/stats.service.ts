@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 
 export class StatsService {
 
-  stats = {today: '-', sevenDays: '-', allTime: '-', aov7: '-'};
+  stats = {today: '-', yesterday: '-', sevenDays: '-', allTime: '-', aov7: '-'};
 
   constructor() { }
 

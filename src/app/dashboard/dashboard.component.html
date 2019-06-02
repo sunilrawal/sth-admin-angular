@@ -1,20 +1,24 @@
 <div class="row">
-  <div class="col-2"></div>
-  <div class="col-8">
+  <div class="col-1"></div>
+  <div class="col-10">
     <div class="panel panel-primary border">
       <div class="panel-heading"><h2>Sales</h2></div>
       <div class="panel-body">
 
         <div class="row">
-          <div class="col-4">
+          <div class="col-3">
             <div><h2>{{ stats.today }}</h2></div>
             <div><p>Today</p></div>
           </div>
-          <div class="col-4">
+          <div class="col-3">
+            <div><h2>{{ stats.yesterday }}</h2></div>
+            <div><p>Yesterday</p></div>
+          </div>
+          <div class="col-3">
             <div><h2>{{ stats.sevenDays }}</h2></div>
             <div><p>7 Days</p></div>
           </div>
-          <div class="col-4">
+          <div class="col-3">
             <div><h2>{{ stats.allTime }}</h2></div>
             <div><p>All Time</p></div>
           </div>
@@ -23,7 +27,7 @@
       </div>
     </div>
   </div>
-  <div class="col-2"></div>
+  <div class="col-1"></div>
 </div>
 
 <div class="row">
@@ -47,8 +51,8 @@
 </div>
 
 <div class="row">
-  <div class="col-2"></div>
-  <div class="col-8">
+  <div class="col-1"></div>
+  <div class="col-10">
     <div class="panel panel-primary border">
       <div class="panel-heading"><h2>Recent Orders</h2></div>
       <div class="panel-body">
@@ -72,7 +76,7 @@
         </div>
 
         <div class="order-item" *ngFor="let order of orders">
-          <div class="row">
+          <div class="row border-bottom">
             <div class="col-3">
               <div><small><a [routerLink]="['/orders', order.order_id]">{{ order.order_id }}</a></small></div>
             </div>
@@ -86,13 +90,13 @@
               <div><small>{{ order.products }}</small></div>
             </div>
             <div class="col-3">
-              <div><img src="{{ order.getImages()[0].url }}" width="100"></div>
+              <div><a [routerLink]="['/orders', order.order_id]"><img class="thumb" src="{{ order.getImages()[0].url }}"></a></div>
             </div>
           </div>
         </div>
       </div>
   </div>
-  <div class="col-2"></div>
+  <div class="col-1"></div>
 
 </div>
 
