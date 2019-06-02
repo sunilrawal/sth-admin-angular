@@ -47,8 +47,8 @@ export class DatabaseService {
     this.http.get(url, requestOptions).subscribe(
       data => {
         let ods: Order[] = Array.from(this.orders);
-        for (let i = 0; i < data.results.length; ++i) {
-          let o = Order.from(data.results[i]);
+        for (let i = 0; i < data['results'].length; ++i) {
+          let o = Order.from(data['results'][i]);
           ods.push(o);
         }
         ods.sort((a, b) => (a.date < b.date) ? 1 : -1);
@@ -69,7 +69,7 @@ export class DatabaseService {
     let url = 'https://apidev.jpeglabs.com/v1/sth-stats';
     this.http.get(url, requestOptions).subscribe(
       data => {
-        callback(data.results);
+        callback(data['results']);
         this.since = new Date();
       },
       error => {
