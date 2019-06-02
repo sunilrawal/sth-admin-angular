@@ -46,11 +46,13 @@ export class DatabaseService {
 
     this.http.get(url, requestOptions).subscribe(
       data => {
-        console.log(`Got ${data.results.length} orders`);
+        let ods: Order[] = Array.from(this.orders);
         for (let i = 0; i < data.results.length; ++i) {
           let o = Order.from(data.results[i]);
-          this.orders.push(o);
+          ods.push(o);
         }
+        ods.sort((a, b) => (a.date < b.date) ? 1 : -1);
+        this.orders = ods;
         callback(this.orders);
       },
       error => {
