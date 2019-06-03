@@ -11,6 +11,7 @@ import { LoginService } from '../services/login.service';
 export class LoginComponent implements OnInit {
 
   loginForm;
+  loginMessageDisplay = 'd-none';
 
   constructor(
     private formBuilder: FormBuilder,
@@ -29,11 +30,14 @@ export class LoginComponent implements OnInit {
   onSubmit(loginData) {
     // Process checkout data here
     let pwd = loginData.pwd;
+    this.loginMessageDisplay = 'd-none';
+
     this.loginService.login(pwd, (success : boolean) => {
+      console.log(success);
       if (success) {
         this.router.navigate(['/dashboard']);
       } else {
-        
+        this.loginMessageDisplay = 'd-inline';
       }
     });
 

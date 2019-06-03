@@ -83,13 +83,12 @@ export class DBApiService {
     );
   };
 
-
   fetchLogin(pwd, callback) {
 
     const requestOptions = {                                                                
       headers: new HttpHeaders(this.headerDict()), 
     };
-    let url = `https://apidev.jpeglabs.com/v1/sth-login?pwd=${pwd}`;
+    let url = `https://apidev.jpeglabs.com/v1/sth-login?client=STHAdminWeb&&pwd=${pwd}`;
     this.http.get(url, requestOptions).subscribe(
       data => {
         const ok = data['status'] === 'ok';

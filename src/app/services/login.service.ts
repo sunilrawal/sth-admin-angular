@@ -15,7 +15,6 @@ export class LoginService {
 
   login(pwd, callback) {
     this.dbapi.fetchLogin(pwd, (status) => {
-      console.log(`Login ${status}`);
       this.loggedIn = status;
       callback(status);
     });

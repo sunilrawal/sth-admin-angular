@@ -23,7 +23,10 @@ export class DashboardComponent implements OnInit {
     private loginService : LoginService,
     private router: Router,
   ) { 
-    router.navigate(['/']);
+    if (!this.loginService.isLoggedIn()) {
+      router.navigate(['/']);
+      return;
+    }
     this.orders = this.ordersService.getOrders();
     this.stats = this.statsService.getStats();
     timer(0, 60000).subscribe(() => this.refreshData());
