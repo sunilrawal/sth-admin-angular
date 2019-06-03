@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { DatabaseService } from '../services/database.service';
+import { DBApiService } from '../services/dbapi.service';
 import { StatsService } from '../services/stats.service';
+import { OrdersService } from '../services/orders.service';
 import { timer } from 'rxjs'
 
 @Component({
@@ -14,10 +15,11 @@ export class DashboardComponent implements OnInit {
   stats;
 
   constructor(
-    private db : DatabaseService,
-    private statsService : StatsService
+    private dbapi : DBApiService,
+    private statsService : StatsService,
+    private ordersService : OrdersService,
   ) { 
-    this.orders = this.db.getOrders();
+    this.orders = this.ordersService.getOrders();
     this.stats = this.statsService.getStats();
 
     timer(0, 60000).subscribe(() => this.refreshData());
@@ -27,13 +29,11 @@ export class DashboardComponent implements OnInit {
   }
 
   refreshData() {
-    this.db.fetchOrders(orders => {
-      this.orders = this.db.getOrders();
+    this.dbapi.fetchOrders(() => {
+      this.orders = this.ordersService.getOrders();
     });
-    this.db.fetchStats(stats => {
-      this.statsService.setStats(stats);
+    this.dbapi.fetchStats(() => {
       this.stats = this.statsService.getStats();
     });
-    console.log('refreshData');
   }
 }

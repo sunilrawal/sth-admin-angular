@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-
-import { DatabaseService } from '../services/database.service';
+import { OrdersService } from '../services/orders.service';
 
 @Component({
   selector: 'app-order',
@@ -14,13 +13,13 @@ export class OrderComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private db : DatabaseService,
+    private ordersService : OrdersService,
   ) { }
 
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
       let orderId = params.get('orderId');
-      this.order = this.db.getOrder(orderId);
+      this.order = this.ordersService.getOrder(orderId);
     });
   }
 

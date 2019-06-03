@@ -6,12 +6,13 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { TopBarComponent } from './top-bar/top-bar.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { DatabaseService } from './services/database.service';
+import { DBApiService } from './services/dbapi.service';
 import { HttpClientModule } from '@angular/common/http';
 import { OrderComponent } from './order/order.component';
 import { StatsService } from './services/stats.service';
 import { LoginComponent } from './login/login.component';
 import { LoginService } from './services/login.service';
+import { OrdersService } from './services/orders.service';
 
 @NgModule({
   imports: [
@@ -32,7 +33,7 @@ import { LoginService } from './services/login.service';
     LoginComponent
   ],
   bootstrap: [ AppComponent ],
-  providers: [DatabaseService, StatsService, LoginService]
+  providers: [DBApiService, StatsService, LoginService, OrdersService]
 })
 export class AppModule { }
 

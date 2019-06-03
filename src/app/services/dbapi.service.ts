@@ -1,31 +1,24 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Order } from '../models/order.model';
+import { OrdersService } from '../services/orders.service';
+import { StatsService } from '../services/stats.service';
 
 @Injectable({
   providedIn: 'root'
 })
 
-export class DatabaseService {
+export class DBApiService {
 
   orders = [];
   since : Date;
+  lastCheckOrders: Date;
+  lastCheckStats: Date;
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private statsService : StatsService,
+    private ordersService : OrdersService,
   ) { 
-  }
-
-  getOrders() {
-    return this.orders;
-  }
-
-  getOrder(orderId) {
-    for (let i = 0; i < this.orders.length; ++i) {
-      if (this.orders[i].order_id == orderId)
-        return this.orders[i];
-    }
-    return undefined;
   }
 
   private headerDict() {
@@ -36,24 +29,27 @@ export class DatabaseService {
   }
 
   fetchOrders(callback) {
+
+    if (this.lastCheckOrders && (new Date()).getTime() - this.lastCheckOrders.getTime() < 60000) {
+      callback();
+      return;
+    }
+
+    this.lastCheckOrders = new Date();
+
     const requestOptions = {                                                                
       headers: new HttpHeaders(this.headerDict()), 
     };
 
     let url = 'https://apidev.jpeglabs.com/v1/sth-orders';
     if (this.since) url = `${url}?since=${this.since.toISOString()}`;
-    console.log(url);
 
     this.http.get(url, requestOptions).subscribe(
       data => {
-        let ods: Order[] = Array.from(this.orders);
-        for (let i = 0; i < data['results'].length; ++i) {
-          let o = Order.from(data['results'][i]);
-          ods.push(o);
-        }
-        ods.sort((a, b) => (a.date < b.date) ? 1 : -1);
-        this.orders = ods;
-        callback(this.orders);
+        console.log(`fetchOrders ${new Date()}`);
+        this.since = new Date();
+        this.ordersService.setOrders(data['results']);
+        callback();
       },
       error => {
         console.log(error);
@@ -63,14 +59,22 @@ export class DatabaseService {
   }
 
   fetchStats(callback) {
+
+    if (this.lastCheckStats && (new Date()).getTime() - this.lastCheckStats.getTime() < 60000) {
+      callback();
+      return;
+    }
+    this.lastCheckStats = new Date();
+
     const requestOptions = {                                                                
       headers: new HttpHeaders(this.headerDict()), 
     };
     let url = 'https://apidev.jpeglabs.com/v1/sth-stats';
+    console.log(`fetchStats ${new Date()}`);
     this.http.get(url, requestOptions).subscribe(
       data => {
-        callback(data['results']);
-        this.since = new Date();
+        this.statsService.setStats(data['results']);
+        callback();
       },
       error => {
         console.log(error);
