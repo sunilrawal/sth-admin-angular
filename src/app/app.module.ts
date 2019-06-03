@@ -10,6 +10,8 @@ import { DatabaseService } from './services/database.service';
 import { HttpClientModule } from '@angular/common/http';
 import { OrderComponent } from './order/order.component';
 import { StatsService } from './services/stats.service';
+import { LoginComponent } from './login/login.component';
+import { LoginService } from './services/login.service';
 
 @NgModule({
   imports: [
@@ -17,7 +19,8 @@ import { StatsService } from './services/stats.service';
     HttpClientModule,
     ReactiveFormsModule,
     RouterModule.forRoot([
-      { path: '', component: DashboardComponent },
+      { path: '', component: LoginComponent },
+      { path: 'dashboard', component: DashboardComponent },
       { path: 'orders/:orderId', component: OrderComponent },
     ])
   ],
@@ -25,10 +28,11 @@ import { StatsService } from './services/stats.service';
     AppComponent,
     TopBarComponent,
     DashboardComponent,
-    OrderComponent
+    OrderComponent,
+    LoginComponent
   ],
   bootstrap: [ AppComponent ],
-  providers: [DatabaseService, StatsService]
+  providers: [DatabaseService, StatsService, LoginService]
 })
 export class AppModule { }
 

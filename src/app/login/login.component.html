@@ -1,0 +1,19 @@
+<div class="row">
+  <div class="col-1"></div>
+  <div class="col-10">
+    <div class="panel panel-primary">
+      <div class="panel-body">
+
+        <div class="row">
+          <div class="col-12">
+            <form [formGroup]="loginForm" (ngSubmit)="onSubmit(loginForm.value)">
+              <div><input type="password" formControlName="pwd"><button class="button" type="submit">Login</button></div>
+            </form>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+  <div class="col-1"></div>
+</div>
