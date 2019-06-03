@@ -81,6 +81,24 @@ export class DBApiService {
         callback({});
       }
     );
-  }
+  };
 
+
+  fetchLogin(pwd, callback) {
+
+    const requestOptions = {                                                                
+      headers: new HttpHeaders(this.headerDict()), 
+    };
+    let url = `https://apidev.jpeglabs.com/v1/sth-login?pwd=${pwd}`;
+    this.http.get(url, requestOptions).subscribe(
+      data => {
+        const ok = data['status'] === 'ok';
+        callback(ok);
+      },
+      error => {
+        console.log(error);
+        callback(false);
+      }
+    );
+  }
 }
