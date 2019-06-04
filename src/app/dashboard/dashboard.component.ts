@@ -5,6 +5,7 @@ import { OrdersService } from '../services/orders.service';
 import { LoginService } from '../services/login.service';
 import { Router } from '@angular/router';
 import { timer } from 'rxjs'
+import { FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'app-dashboard',
@@ -15,6 +16,8 @@ export class DashboardComponent implements OnInit {
 
   orders;
   stats;
+  searchForm;
+  searchMessageDisplay = 'd-none';
 
   constructor(
     private dbapi : DBApiService,
@@ -22,6 +25,7 @@ export class DashboardComponent implements OnInit {
     private ordersService : OrdersService,
     private loginService : LoginService,
     private router: Router,
+    private formBuilder: FormBuilder,
   ) { 
     if (!this.loginService.isLoggedIn()) {
       router.navigate(['/']);
@@ -29,6 +33,10 @@ export class DashboardComponent implements OnInit {
     }
     this.orders = this.ordersService.getOrders();
     this.stats = this.statsService.getStats();
+    this.searchForm = this.formBuilder.group({
+      orderId: ''
+    });
+
     timer(0, 60000).subscribe(() => this.refreshData());
   }
 
@@ -43,4 +51,17 @@ export class DashboardComponent implements OnInit {
       this.stats = this.statsService.getStats();
     });
   }
+
+  onSubmit(searchData) {
+    // Process checkout data here
+    let orderId = searchData.orderId;
+    this.searchMessageDisplay = 'd-none';
+    const foundOrder = this.ordersService.find(orderId);
+    if (foundOrder) {
+      this.router.navigate(['/order', orderId]);
+    } else {
+      this.searchMessageDisplay = 'd-inline';
+    }
+  }
+
 }

@@ -33,14 +33,12 @@ export class LoginComponent implements OnInit {
     this.loginMessageDisplay = 'd-none';
 
     this.loginService.login(pwd, (success : boolean) => {
-      console.log(success);
       if (success) {
         this.router.navigate(['/dashboard']);
       } else {
         this.loginMessageDisplay = 'd-inline';
       }
     });
-
   }
 
 }

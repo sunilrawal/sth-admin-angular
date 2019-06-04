@@ -38,4 +38,12 @@ export class OrdersService {
     }
     return undefined;
   }
+
+  find(orderId) {
+    for (let i = 0; i < this.orders.length; ++i) {
+      if (this.orders[i].order_id === orderId)
+        return this.orders[i];
+    }
+    return undefined;
+  }
 }
