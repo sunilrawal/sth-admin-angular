@@ -18,6 +18,15 @@
 
           <div class="row">
             <div class="col-6">
+              <div><p class="font-weight-bold">Status</p></div>
+            </div>
+            <div class="col-6">
+              <div><p class='text-left'>{{ order.status }}</p></div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-6">
               <div><p class="font-weight-bold">Details</p></div>
             </div>
             <div class="col-6">
@@ -40,7 +49,7 @@
               <div><p class="font-weight-bold">Amount</p></div>
             </div>
             <div class="col-6">
-              <div><p class='text-left'>${{ order.amount }}</p></div>
+              <div><p class='text-left'>${{ order.amount.toFixed(2) }}</p></div>
             </div>
           </div>
 
@@ -50,6 +59,15 @@
             </div>
             <div class="col-6">
               <div><p class='text-left'>{{ order.products }}</p></div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-6">
+              <div><p class="font-weight-bold">Tracking</p></div>
+            </div>
+            <div class="col-6">
+              <div><p class='text-left'>{{ order.tracking_links }}</p></div>
             </div>
           </div>
 
