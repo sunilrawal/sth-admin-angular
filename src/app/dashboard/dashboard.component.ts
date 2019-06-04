@@ -58,7 +58,7 @@ export class DashboardComponent implements OnInit {
     this.searchMessageDisplay = 'd-none';
     const foundOrder = this.ordersService.find(orderId);
     if (foundOrder) {
-      this.router.navigate(['/order', orderId]);
+      this.router.navigate(['/orders', orderId]);
     } else {
       this.searchMessageDisplay = 'd-inline';
     }
