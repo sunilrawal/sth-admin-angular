@@ -6,6 +6,7 @@ export class Order {
   amount: number;
   details: any;
   products: string;
+  tracking_numbers: string;
   date : Date;
 
   static from(obj: any) {
@@ -37,4 +38,5 @@ export class Order {
     }
     return prodsStr.join(', ');
   }
+
 }
