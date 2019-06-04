@@ -67,7 +67,7 @@
               <div><p class="font-weight-bold">Tracking</p></div>
             </div>
             <div class="col-6">
-              <div *ngFor="let tn of order.tracking_numbers.split(',')">
+              <div *ngFor="let tn of order.getTrackingNumbers()">
                 <p class='text-left'>
                   <a target="_" href="https://www.ups-mi.net/packageID/packageid.aspx?pid={{ tn }}">{{ tn }}</a>
                 </p>

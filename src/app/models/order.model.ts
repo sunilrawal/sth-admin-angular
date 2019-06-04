@@ -39,4 +39,7 @@ export class Order {
     return prodsStr.join(', ');
   }
 
+  getTrackingNumbers() {
+    return this.tracking_numbers ? this.tracking_numbers.split(',') : [];
+  }
 }
