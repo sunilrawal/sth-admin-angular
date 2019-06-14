@@ -88,8 +88,15 @@
         <div class="order-item" *ngFor="let order of orders">
           <div class="row border-bottom">
             <div class="col-3">
-              <div><small><a [routerLink]="['/orders', order.order_id]">{{ order.order_id }}</a></small></div>
+              <div><small><a [routerLink]="['/orders', order.order_id]" target="_">{{ order.order_id }}</a></small></div>
               <div><small>({{ order.status }})</small></div>
+              <div *ngIf="order.status === 'Shipped'">
+                  <div *ngFor="let tn of order.getTrackingNumbers()">
+                    <p class='text-center'><small>
+                      <a target="_" href="https://www.ups-mi.net/packageID/packageid.aspx?pid={{ tn }}">{{ tn }}</a>
+                      </small></p>
+                  </div>
+              </div>
             </div>
             <div class="col-2">
               <div><small>{{ order.amount.toFixed(2) }}</small></div>
@@ -101,7 +108,7 @@
               <div><small>{{ order.products }}</small></div>
             </div>
             <div class="col-3">
-              <div><a [routerLink]="['/orders', order.order_id]"><img class="thumb" src="{{ order.getImages()[0].url }}"></a></div>
+              <div><a [routerLink]="['/orders', order.order_id]" ><img class="thumb" src="{{ order.getImages()[0].url }}"></a></div>
             </div>
           </div>
         </div>
