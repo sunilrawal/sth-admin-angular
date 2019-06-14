@@ -59,7 +59,6 @@ export class OrdersService {
     }
 
     this.dbapi.fetchOrder(orderId, (order) => {
-      console.log(order);
       this.setOrder(order);
       callback(order);
     });

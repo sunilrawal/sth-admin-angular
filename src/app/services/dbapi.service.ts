@@ -59,10 +59,8 @@ export class DBApiService {
     };
 
     let url = `https://apidev.jpeglabs.com/v1/sth-orders?orderId=${orderId}`;
-    console.log(url);
     this.http.get(url, requestOptions).subscribe(
       data => {
-        console.log(Object.keys(data['results']));
         callback(data['order']);
       },
       error => {
