@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { OrdersService } from '../services/orders.service';
 import { StatsService } from '../services/stats.service';
 
 @Injectable({
@@ -17,7 +16,6 @@ export class DBApiService {
   constructor(
     private http: HttpClient,
     private statsService : StatsService,
-    private ordersService : OrdersService,
   ) { 
   }
 
@@ -29,7 +27,6 @@ export class DBApiService {
   }
 
   fetchOrders(callback) {
-
     if (this.lastCheckOrders && (new Date()).getTime() - this.lastCheckOrders.getTime() < 60000) {
       callback();
       return;
@@ -46,10 +43,8 @@ export class DBApiService {
 
     this.http.get(url, requestOptions).subscribe(
       data => {
-        console.log(`fetchOrders ${new Date()}`);
         this.since = new Date();
-        this.ordersService.setOrders(data['results']);
-        callback();
+        callback(data['results']);
       },
       error => {
         console.log(error);
@@ -58,8 +53,25 @@ export class DBApiService {
     );
   }
 
-  fetchStats(callback) {
+  fetchOrder(orderId, callback) {
+    const requestOptions = {                                                                
+      headers: new HttpHeaders(this.headerDict()), 
+    };
 
+    let url = `https://apidev.jpeglabs.com/v1/sth-orders?orderId=${orderId}`;
+    console.log(url);
+    this.http.get(url, requestOptions).subscribe(
+      data => {
+        console.log(Object.keys(data['results']));
+        callback(data['order']);
+      },
+      error => {
+        callback({});
+      }
+    );
+  }
+
+  fetchStats(callback) {
     if (this.lastCheckStats && (new Date()).getTime() - this.lastCheckStats.getTime() < 60000) {
       callback();
       return;
@@ -84,7 +96,6 @@ export class DBApiService {
   };
 
   fetchLogin(pwd, callback) {
-
     const requestOptions = {                                                                
       headers: new HttpHeaders(this.headerDict()), 
     };

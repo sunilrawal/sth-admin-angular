@@ -88,7 +88,7 @@
         <div class="order-item" *ngFor="let order of orders">
           <div class="row border-bottom">
             <div class="col-3">
-              <div><small><a [routerLink]="['/orders', order.order_id]" target="_">{{ order.order_id }}</a></small></div>
+              <div><small><a [routerLink]="['/orders', order.order_id]">{{ order.order_id }}</a></small></div>
               <div><small>({{ order.status }})</small></div>
               <div *ngIf="order.status === 'Shipped'">
                   <div *ngFor="let tn of order.getTrackingNumbers()">

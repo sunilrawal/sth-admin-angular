@@ -23,7 +23,8 @@ import { OrdersService } from './services/orders.service';
       { path: '', component: LoginComponent },
       { path: 'dashboard', component: DashboardComponent },
       { path: 'orders/:orderId', component: OrderComponent },
-    ])
+    ],
+    { scrollPositionRestoration: 'enabled' })
   ],
   declarations: [
     AppComponent,

@@ -44,7 +44,8 @@ export class DashboardComponent implements OnInit {
   }
 
   refreshData() {
-    this.dbapi.fetchOrders(() => {
+    this.dbapi.fetchOrders((orders) => {
+      this.ordersService.setOrders(orders);
       this.orders = this.ordersService.getOrders();
     });
     this.dbapi.fetchStats(() => {
@@ -56,12 +57,13 @@ export class DashboardComponent implements OnInit {
     // Process checkout data here
     let orderId = searchData.orderId;
     this.searchMessageDisplay = 'd-none';
-    const foundOrder = this.ordersService.find(orderId);
-    if (foundOrder) {
-      this.router.navigate(['/orders', orderId]);
-    } else {
-      this.searchMessageDisplay = 'd-inline';
-    }
+    this.ordersService.find(orderId, (order) => {
+      if (order) {
+        this.router.navigate(['/orders', orderId]);
+      } else {
+        this.searchMessageDisplay = 'd-inline';
+      }
+    });
   }
 
 }
