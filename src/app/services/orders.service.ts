@@ -59,8 +59,9 @@ export class OrdersService {
     }
 
     this.dbapi.fetchOrder(orderId, (order) => {
-      this.setOrder(order);
-      callback(order);
+      const o = Order.from(order);
+      this.setOrder(o);
+      callback(o);
     });
 
   }
