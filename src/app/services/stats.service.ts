@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 
 export class StatsService {
 
-  stats = {today: '-', yesterday: '-', sevenDays: '-', allTime: '-', aov7: '-'};
+  stats = {today: '-', yesterday: '-', sevenDays: '-', allTime: '-', aov7: '-', mtd: '-'};
 
   constructor() { }
 
@@ -14,7 +14,7 @@ export class StatsService {
     var keys = Object.keys(stats);
     for (let i = 0; i < keys.length; ++i) {
       let key = keys[i];
-      this.stats[key] = `$${stats[key].toFixed(2)}`;
+      this.stats[key] = `$${parseFloat(stats[key]).toLocaleString()}`;
     }
   }
 

@@ -80,9 +80,9 @@ export class DBApiService {
       headers: new HttpHeaders(this.headerDict()), 
     };
     let url = 'https://apidev.jpeglabs.com/v1/sth-stats';
-    console.log(`fetchStats ${new Date()}`);
     this.http.get(url, requestOptions).subscribe(
       data => {
+        console.log(data);
         this.statsService.setStats(data['results']);
         callback();
       },
