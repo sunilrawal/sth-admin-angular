@@ -14,7 +14,7 @@ export class StatsService {
     var keys = Object.keys(stats);
     for (let i = 0; i < keys.length; ++i) {
       let key = keys[i];
-      this.stats[key] = `$${parseFloat(stats[key]).toLocaleString()}`;
+      this.stats[key] = `$${parseInt(stats[key]).toLocaleString()}`;
     }
   }
 
