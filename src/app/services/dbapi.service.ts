@@ -22,7 +22,7 @@ export class DBApiService {
   private headerDict() {
     return {
       'Content-Type': 'application/json',
-      'x-api-key': 'InuEZx7NXy6u6L2Wq5tye82j8hVQU9Ml8fp6wpxe',
+      'x-api-key': '5OXiKzjasT9IkuM6e4biI29SPT4ONc264qZw0Ult',
     };
   }
 
@@ -38,7 +38,7 @@ export class DBApiService {
       headers: new HttpHeaders(this.headerDict()), 
     };
 
-    let url = 'https://apidev.jpeglabs.com/v1/sth-orders';
+    let url = 'https://api.jpeglabs.com/v1/sth-orders';
     if (this.since) url = `${url}?since=${this.since.toISOString()}`;
 
     this.http.get(url, requestOptions).subscribe(
@@ -58,7 +58,7 @@ export class DBApiService {
       headers: new HttpHeaders(this.headerDict()), 
     };
 
-    let url = `https://apidev.jpeglabs.com/v1/sth-orders?orderId=${orderId}`;
+    let url = `https://api.jpeglabs.com/v1/sth-orders?orderId=${orderId}`;
     this.http.get(url, requestOptions).subscribe(
       data => {
         callback(data['order']);
@@ -79,7 +79,7 @@ export class DBApiService {
     const requestOptions = {                                                                
       headers: new HttpHeaders(this.headerDict()), 
     };
-    let url = 'https://apidev.jpeglabs.com/v1/sth-stats';
+    let url = 'https://api.jpeglabs.com/v1/sth-stats';
     this.http.get(url, requestOptions).subscribe(
       data => {
         console.log(data);
@@ -97,7 +97,7 @@ export class DBApiService {
     const requestOptions = {                                                                
       headers: new HttpHeaders(this.headerDict()), 
     };
-    let url = `https://apidev.jpeglabs.com/v1/sth-login?client=STHAdminWeb&&pwd=${pwd}`;
+    let url = `https://api.jpeglabs.com/v1/sth-login?client=STHAdminWeb&&pwd=${pwd}`;
     this.http.get(url, requestOptions).subscribe(
       data => {
         const ok = data['status'] === 'ok';

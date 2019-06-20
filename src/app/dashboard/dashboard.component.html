@@ -5,21 +5,29 @@
       <div class="panel-body">
 
         <div class="row">
-          <div class="col-3">
-            <div><h3>{{ stats.today }}</h3></div>
+          <div class="col-2">
+            <div><h3>{{ stats.salesToday }}</h3></div>
             <div><p>Today</p></div>
           </div>
-          <div class="col-3">
-            <div><h3>{{ stats.yesterday }}</h3></div>
+          <div class="col-2">
+            <div><h3>{{ stats.salesYesterday }}</h3></div>
             <div><p>Yesterday</p></div>
           </div>
-          <div class="col-3">
-            <div><h3>{{ stats.sevenDays }}</h3></div>
+          <div class="col-2">
+            <div><h3>{{ stats.salesSevenDays }}</h3></div>
             <div><p>7 Days</p></div>
           </div>
-          <div class="col-3">
-            <div><h3>{{ stats.mtd }}</h3></div>
+          <div class="col-2">
+            <div><h3>{{ stats.salesMtd }}</h3></div>
             <div><p>Month-to-date</p></div>
+          </div>
+          <div class="col-2">
+            <div><h3>{{ stats.aov7 }}</h3></div>
+            <div><p>AOV (7 days)</p></div>
+          </div>
+          <div class="col-2">
+            <div><h3>{{ stats.salesAllTime }}</h3></div>
+            <div><p>All time</p></div>
           </div>
         </div>
         
@@ -29,23 +37,29 @@
 </div>
 
 <div class="row">
-  <div class="col-2"></div>
-  <div class="col-8">
+  <div class="col-12">
     <div class="panel panel-primary border">
-      <div class="panel-heading"><h2>Stats</h2></div>
+      <div class="panel-heading"><h2>Counts</h2></div>
       <div class="panel-body">
 
         <div class="row">
-          <div class="col-12">
-            <div><h3>{{ stats.aov7 }}</h3></div>
-            <div><p>AOV (7 days)</p></div>
+          <div class="col-4">
+            <div><h3>{{ stats.ordersToday }}</h3></div>
+            <div><p>Orders today</p></div>
+          </div>
+          <div class="col-4">
+            <div><h3>{{ stats.customersToday }}</h3></div>
+            <div><p>Customers today</p></div>
+          </div>
+          <div class="col-4">
+            <div><h3>{{ stats.repeats7 }}</h3></div>
+            <div><p>Repeats (7 days)</p></div>
           </div>
         </div>
         
       </div>
     </div>
   </div>
-  <div class="col-2"></div>
 </div>
 
 <div class="row">

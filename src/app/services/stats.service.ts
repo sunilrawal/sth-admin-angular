@@ -6,18 +6,22 @@ import { Injectable } from '@angular/core';
 
 export class StatsService {
 
-  stats = {today: '-', yesterday: '-', sevenDays: '-', allTime: '-', aov7: '-', mtd: '-'};
+  stats = {salesToday: '-', salesYesterday: '-', salesSevenDays: '-', salesAllTime: '-', aov7: '-', salesMtd: '-',
+  ordersToday: '-', customersToday: '-', repeats7: '-'};
 
   constructor() { }
 
   setStats(stats) {
     var keys = Object.keys(stats);
-    var aov7 = stats['aov7'];
     for (let i = 0; i < keys.length; ++i) {
       let key = keys[i];
-      this.stats[key] = `$${parseInt(stats[key]).toLocaleString()}`;
+      if (key.startsWith('sales')) {
+        this.stats[key] = `$${parseInt(stats[key]).toLocaleString()}`;
+      } else {
+        this.stats[key] = stats[key];
+      }
     }
-    this.stats['aov7'] = `$${parseFloat(aov7).toFixed(2)}`;
+    this.stats['aov7'] = `$${parseFloat(stats['aov7']).toFixed(2)}`;
   }
 
   getStats() {
