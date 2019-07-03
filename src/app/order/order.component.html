@@ -78,7 +78,7 @@
             <div class="col-6">
               <div *ngFor="let tn of order.getTrackingNumbers()">
                 <p class='text-left'>
-                  <a target="_" href="https://www.ups-mi.net/packageID/packageid.aspx?pid={{ tn }}">{{ tn }}</a>
+                  <a target="_" href="{{ order.getTrackingLink(tn) }}">{{ tn }}</a>
                 </p>
               </div>
             </div>

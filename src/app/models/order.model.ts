@@ -42,4 +42,10 @@ export class Order {
   getTrackingNumbers() {
     return this.tracking_numbers ? this.tracking_numbers.split(',') : [];
   }
+
+  getTrackingLink(tn) {
+    return tn.length === 12 ? 
+    `https://www.fedex.com/apps/fedextrack/?tracknumbers=${tn}&cntry_code=us` :
+    `https://www.ups-mi.net/packageID/packageid.aspx?pid=${tn}`
+  }
 }
