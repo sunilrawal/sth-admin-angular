@@ -17,10 +17,25 @@ export class Order {
     return o;
   }
 
-  getImages() {
-    return this.details.images;
+  getImages(size : string) {
+    let imgs = [];
+    for (let i = 0; i < this.details.images.length; ++i) {
+      let img = this.details.images[i];
+      if (!size || img.size === size) {
+        imgs.push(img);
+      }
+    }
+    return imgs;
   }
 
+  getSizes() {
+    let sizes = {};
+    for (let i = 0; i < this.details.images.length; ++i) {
+      let img = this.details.images[i];
+      sizes[img.size] = true;
+    }
+    return Object.keys(sizes);
+  }
   productsFromDetails() {
     let prods = {};
     for (let i = 0; i < this.details.images.length; ++i) {

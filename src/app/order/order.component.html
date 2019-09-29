@@ -93,8 +93,9 @@
   <div class="row">
     <div class="col-12">
       <div class="panel panel-primary">
-        <div class="panel-body">
-          <span class="order-image" *ngFor="let image of order.getImages()">
+        <div class="panel-body" *ngFor="let size of order.getSizes()">
+          <div class="panel-heading"><h2>{{ size }}</h2></div>
+          <span class="order-image" *ngFor="let image of order.getImages(size)">
             <a target="_" href="{{ image.url }}"><img src="{{ image.url }}" width="200"></a>
           </span>
         </div>
