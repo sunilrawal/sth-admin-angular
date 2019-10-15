@@ -122,7 +122,11 @@
               <div><small>{{ order.products }}</small></div>
             </div>
             <div class="col-3">
-              <div><a target='_' [routerLink]="['/orders', order.order_id]" ><img class="thumb" src="{{ order.getImages()[0].url }}"></a></div>
+              <div>
+                <a target='_' [routerLink]="['/orders', order.order_id]" >
+                  <img class="thumb" src="{{ order.getImages().length > 0 ? order.getImages()[0].url : '' }}">
+                </a>
+              </div>
             </div>
           </div>
         </div>

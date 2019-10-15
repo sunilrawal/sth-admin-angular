@@ -18,6 +18,7 @@ export class Order {
   }
 
   getImages(size : string) {
+    if (this.details.images === undefined) return [];
     let imgs = [];
     for (let i = 0; i < this.details.images.length; ++i) {
       let img = this.details.images[i];
@@ -29,6 +30,7 @@ export class Order {
   }
 
   getSizes() {
+    if (this.details.images === undefined) return {};
     let sizes = {};
     for (let i = 0; i < this.details.images.length; ++i) {
       let img = this.details.images[i];
@@ -37,6 +39,7 @@ export class Order {
     return Object.keys(sizes);
   }
   productsFromDetails() {
+    if (this.details.images === undefined) return '';
     let prods = {};
     for (let i = 0; i < this.details.images.length; ++i) {
       let img = this.details.images[i];
