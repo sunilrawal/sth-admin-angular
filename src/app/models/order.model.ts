@@ -51,6 +51,8 @@ export class Order {
       case '5x7':
       case '8x10':
       case 'Print;1010':
+      case 'PRGift;5343':
+      case '?':
         return 'Prints';
       case 'PRGift;4113':
       case 'PRGift;4214':
