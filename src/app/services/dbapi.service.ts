@@ -83,6 +83,7 @@ export class DBApiService {
     this.http.get(url, requestOptions).subscribe(
       data => {
         console.log(data);
+        
         this.statsService.setStats(data['results']);
         callback();
       },
