@@ -18,14 +18,16 @@ export class Order {
   }
 
   getImages(size : string) {
-    if (!size) return this.details.images;
+    const images = this.details.images ? this.details.images : this.details.imageUrls;
+    if (!size) return images;
     const sz = size.split(' ')[0];
     const pt = size.split(' ')[1];
-    if (this.details.images === undefined) return [];
+    if (images === undefined) return [];
     let imgs = [];
-    for (let i = 0; i < this.details.images.length; ++i) {
-      let img = this.details.images[i];
-      let productType = this.getProductType(img.productId);
+    for (let i = 0; i < images.length; ++i) {
+      let img = images[i];
+      const pid = img.productId ? img.productId : img.size;
+      let productType = this.getProductType(pid);
       if (img.size === sz && productType === pt) {
         imgs.push(img);
       }
@@ -34,11 +36,13 @@ export class Order {
   }
 
   getSizes() {
-    if (this.details.images === undefined) return {};
+    const images = this.details.images ? this.details.images : this.details.imageUrls;
+    if (images === undefined) return {};
     let sizes = {};
-    for (let i = 0; i < this.details.images.length; ++i) {
-      let img = this.details.images[i];
-      let productType = this.getProductType(img.productId);
+    for (let i = 0; i < images.length; ++i) {
+      let img = images[i];
+      const pid = img.productId ? img.productId : img.size;
+      let productType = this.getProductType(pid);
       sizes[`${img.size} ${productType}`] = true;
     }
     return Object.keys(sizes);
@@ -51,17 +55,28 @@ export class Order {
       case '5x7':
       case '8x10':
       case 'Print;1010':
-      case 'PRGift;5343':
+      case '6080004':
+      case '6080001':
+      case '6080002':
+      case '6080003':
+      case '6080005':
       case '?':
         return 'Prints';
       case 'PRGift;4113':
       case 'PRGift;4214':
       case 'PRGift;4110':
       case 'PRGift;5907':
+      case '6080008':
+      case '6080009':
+      case '6080010':
+      case '6080011':
         return 'Posters';
       case 'PRGift;5812':
       case 'PRGift;5136':
       case 'PRGift;5137':
+      case '6080013':
+      case '6080015':
+      case '6080016':
         return 'Canvas';
       default:
         return 'Unknown';
@@ -69,13 +84,15 @@ export class Order {
   }
 
   productsFromDetails() {
-    if (this.details.images === undefined) return '';
+    const images = this.details.images ? this.details.images : this.details.imageUrls;
+    if (images === undefined) return '';
     let prods = {};
-    for (let i = 0; i < this.details.images.length; ++i) {
-      let img = this.details.images[i];
+    for (let i = 0; i < images.length; ++i) {
+      let img = images[i];
       let sz = img.size;
       let qty = img.qty;
-      let prod = this.getProductType(img.productId);
+      const pid = img.productId ? img.productId : img.size;
+      let prod = this.getProductType(pid);
       let key = `${sz} ${prod}`;
       let count = prods[key] === undefined ? 0 : prods[key];
       prods[key] = count + qty;

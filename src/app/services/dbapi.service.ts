@@ -10,13 +10,19 @@ export class DBApiService {
 
   orders = [];
   since : Date;
-  lastCheckOrders: Date;
-  lastCheckStats: Date;
+  lastCheckOrdersSTH: Date;
+  lastCheckStatsSTH: Date;
+  lastCheckOrdersStore: Date;
+  lastCheckStatsStore: Date;
 
   constructor(
     private http: HttpClient,
     private statsService : StatsService,
   ) { 
+    this.lastCheckOrdersSTH = new Date(2019, 1, 1);
+    this.lastCheckOrdersStore = new Date(2019, 1, 1);
+    this.lastCheckStatsSTH = new Date(2019, 1, 1);
+    this.lastCheckStatsStore = new Date(2019, 1, 1);
   }
 
   private headerDict() {
@@ -26,24 +32,31 @@ export class DBApiService {
     };
   }
 
-  fetchOrders(callback) {
-    if (this.lastCheckOrders && (new Date()).getTime() - this.lastCheckOrders.getTime() < 60000) {
+  fetchOrders(source, callback) {
+    const dt = source === 'sth' ? this.lastCheckOrdersSTH : this.lastCheckOrdersStore;
+    if ((new Date()).getTime() - dt.getTime() < 60000) {
       callback();
       return;
     }
 
-    this.lastCheckOrders = new Date();
+    if (source === 'sth') { 
+      this.lastCheckOrdersSTH = new Date();
+    } else {
+      this.lastCheckOrdersStore = new Date();
+    }
 
     const requestOptions = {                                                                
       headers: new HttpHeaders(this.headerDict()), 
     };
 
-    let url = 'https://api.jpeglabs.com/v1/sth-orders';
-    if (this.since) url = `${url}?since=${this.since.toISOString()}`;
+    const tableName = source === 'store' ? 'photoorders' : 'sthorders';
+    let url = `https://api.jpeglabs.com/v1/photo-orders?tableName=${tableName}&q=orders&`;
+    if (this.since) url += `since=${this.since.toISOString()}`;
 
     this.http.get(url, requestOptions).subscribe(
       data => {
         this.since = new Date();
+        if (!data['results']) console.log(data);
         callback(data['results']);
       },
       error => {
@@ -53,12 +66,13 @@ export class DBApiService {
     );
   }
 
-  fetchOrder(orderId, callback) {
+  fetchOrder(source, orderId, callback) {
     const requestOptions = {                                                                
       headers: new HttpHeaders(this.headerDict()), 
     };
 
-    let url = `https://api.jpeglabs.com/v1/sth-orders?orderId=${orderId}`;
+    const tableName = source === 'store' ? 'photoorders' : 'sthorders';
+    let url = `https://api.jpeglabs.com/v1/photo-orders?tableName=${tableName}&q=orders&orderId=${orderId}`;
     this.http.get(url, requestOptions).subscribe(
       data => {
         callback(data['order']);
@@ -69,21 +83,27 @@ export class DBApiService {
     );
   }
 
-  fetchStats(callback) {
-    if (this.lastCheckStats && (new Date()).getTime() - this.lastCheckStats.getTime() < 60000) {
+  fetchStats(source, callback) {
+    const dt = source === 'sth' ? this.lastCheckStatsSTH : this.lastCheckStatsStore;
+    if ((new Date()).getTime() - dt.getTime() < 60000) {
       callback();
       return;
     }
-    this.lastCheckStats = new Date();
+
+    if (source === 'sth') { 
+      this.lastCheckStatsSTH = new Date();
+    } else {
+      this.lastCheckStatsStore = new Date();
+    }
 
     const requestOptions = {                                                                
       headers: new HttpHeaders(this.headerDict()), 
     };
-    let url = 'https://api.jpeglabs.com/v1/sth-stats';
+  
+    const tableName = source === 'store' ? 'photoorders' : 'sthorders';
+    let url = `https://api.jpeglabs.com/v1/photo-orders?tableName=${tableName}&q=stats`;
     this.http.get(url, requestOptions).subscribe(
       data => {
-        console.log(data);
-        
         this.statsService.setStats(data['results']);
         callback();
       },

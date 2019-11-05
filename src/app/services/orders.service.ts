@@ -8,59 +8,71 @@ import { DBApiService } from '../services/dbapi.service';
 
 export class OrdersService {
 
-  orders = [];
+  sthOrders = [];
+  storeOrders = [];
   constructor(
     private dbapi : DBApiService
   ) { }
 
-  setOrders(orders) {
-    const lookup = this.orderLookup();
-
-    let ods: Order[] = Array.from(this.orders);
+  setOrders(source, orders) {
+    const lookup = this.orderLookup(source);
+    const sourceOrders = source === 'sth' ? this.sthOrders : this.storeOrders;
+    let ods: Order[] = Array.from(sourceOrders);
     for (let i = 0; i < orders.length; ++i) {
       let o = Order.from(orders[i]);
       if (!lookup[o.order_id])
         ods.push(o);
     }
     ods.sort((a, b) => (a.date < b.date) ? 1 : -1);
-    this.orders = ods;
+    if (source === 'sth') {
+      this.sthOrders = ods;
+    } else {
+      this.storeOrders = ods;
+    }
   }
 
-  setOrder(order) {
-    const lookup = this.orderLookup();
+  setOrder(source, order) {
+    const sourceOrders = source === 'sth' ? this.sthOrders : this.storeOrders;
+    const lookup = this.orderLookup(source);
     if (lookup[order.order_id]) {
       return;
     }
-    let ods: Order[] = Array.from(this.orders);
+    let ods: Order[] = Array.from(sourceOrders);
     ods.push(order);
     ods.sort((a, b) => (a.date < b.date) ? 1 : -1);
-    this.orders = ods;
+    if (source === 'sth') {
+      this.sthOrders = ods;
+    } else {
+      this.storeOrders = ods;
+    }
   }
 
-  orderLookup() {
+  orderLookup(source) {
+    const sourceOrders = source === 'sth' ? this.sthOrders : this.storeOrders;
     const lookup = {};
-    for (let i = 0; i < this.orders.length; ++i) {
-      const o = this.orders[i];
+    for (let i = 0; i < sourceOrders.length; ++i) {
+      const o = sourceOrders[i];
       lookup[o.order_id] = o;
     }
     return lookup;
   }
 
-  getOrders() {
-    return this.orders;
+  getOrders(source) {
+    return source === 'sth' ? this.sthOrders : this.storeOrders;
   }
 
-  find(orderId, callback) {
-    for (let i = 0; i < this.orders.length; ++i) {
-      if (this.orders[i].order_id === orderId) {
-        callback(this.orders[i]);
+  find(source, orderId, callback) {
+    const sourceOrders = source === 'sth' ? this.sthOrders : this.storeOrders;
+    for (let i = 0; i < sourceOrders.length; ++i) {
+      if (sourceOrders[i].order_id === orderId) {
+        callback(sourceOrders[i]);
         return;
       }
     }
 
-    this.dbapi.fetchOrder(orderId, (order) => {
+    this.dbapi.fetchOrder(source, orderId, (order) => {
       const o = Order.from(order);
-      this.setOrder(o);
+      this.setOrder(source, o);
       callback(o);
     });
 

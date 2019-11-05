@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { DBApiService } from '../services/dbapi.service';
-import { StatsService } from '../services/stats.service';
-import { OrdersService } from '../services/orders.service';
-import { LoginService } from '../services/login.service';
+import { DBApiService } from '../../services/dbapi.service';
+import { StatsService } from '../../services/stats.service';
+import { OrdersService } from '../../services/orders.service';
+import { LoginService } from '../../services/login.service';
 import { Router } from '@angular/router';
 import { timer } from 'rxjs'
 import { FormBuilder } from '@angular/forms';
@@ -12,6 +12,7 @@ import { FormBuilder } from '@angular/forms';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
+
 export class DashboardComponent implements OnInit {
 
   orders;
@@ -27,11 +28,11 @@ export class DashboardComponent implements OnInit {
     private router: Router,
     private formBuilder: FormBuilder,
   ) { 
-    if (!this.loginService.isLoggedIn()) {
-      router.navigate(['/']);
-      return;
-    }
-    this.orders = this.ordersService.getOrders();
+    // if (!this.loginService.isLoggedIn()) {
+    //   router.navigate(['/']);
+    //   return;
+    // }
+    this.orders = this.ordersService.getOrders('sth');
     this.stats = this.statsService.getStats();
     this.searchForm = this.formBuilder.group({
       orderId: ''
@@ -44,11 +45,11 @@ export class DashboardComponent implements OnInit {
   }
 
   refreshData() {
-    this.dbapi.fetchOrders((orders) => {
-      this.ordersService.setOrders(orders);
-      this.orders = this.ordersService.getOrders();
+    this.dbapi.fetchOrders('sth', (orders) => {
+      this.ordersService.setOrders('sth', orders);
+      this.orders = this.ordersService.getOrders('sth');
     });
-    this.dbapi.fetchStats(() => {
+    this.dbapi.fetchStats('sth', () => {
       this.stats = this.statsService.getStats();
     });
   }
@@ -57,7 +58,7 @@ export class DashboardComponent implements OnInit {
     // Process checkout data here
     let orderId = searchData.orderId;
     this.searchMessageDisplay = 'd-none';
-    this.ordersService.find(orderId, (order) => {
+    this.ordersService.find('sth', orderId, (order) => {
       if (order) {
         this.router.navigate(['/orders', orderId]);
       } else {
