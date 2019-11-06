@@ -104,7 +104,7 @@ export class DBApiService {
     let url = `https://api.jpeglabs.com/v1/photo-orders?tableName=${tableName}&q=stats`;
     this.http.get(url, requestOptions).subscribe(
       data => {
-        this.statsService.setStats(data['results']);
+        this.statsService.setStats(source, data['results']);
         callback();
       },
       error => {

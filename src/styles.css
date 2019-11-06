@@ -71,19 +71,22 @@ app-top-bar {
 }
 
 menu-bar {
-  width: 100%;
+  width: 100% + 30px;
   height: 36px;
   background-color: #06213b;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  margin-left: -15px;
+  margin-right: -15px;
 }
 
 app-top-bar h1 {
   color: white;
   margin: 0;
 }
+
 
 .panel-primary{
   margin-top: 1em !important;

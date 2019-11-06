@@ -15,6 +15,8 @@ export class OrdersService {
   ) { }
 
   setOrders(source, orders) {
+    if (!orders) return;
+    
     const lookup = this.orderLookup(source);
     const sourceOrders = source === 'sth' ? this.sthOrders : this.storeOrders;
     let ods: Order[] = Array.from(sourceOrders);

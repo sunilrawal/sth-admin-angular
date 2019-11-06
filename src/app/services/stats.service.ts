@@ -6,30 +6,35 @@ import { Injectable } from '@angular/core';
 
 export class StatsService {
 
-  stats = {salesToday: '-', salesYesterday: '-', salesSevenDays: '-', salesAllTime: '-', aov7: '-', salesMtd: '-',
+  statsSTH = {salesToday: '-', salesYesterday: '-', salesSevenDays: '-', salesAllTime: '-', aov7: '-', salesMtd: '-',
+  ordersToday: '-', customersToday: '-', repeats7: '-', productStats: '-'};
+
+  statsStore = {salesToday: '-', salesYesterday: '-', salesSevenDays: '-', salesAllTime: '-', aov7: '-', salesMtd: '-',
   ordersToday: '-', customersToday: '-', repeats7: '-', productStats: '-'};
 
   constructor() { }
 
-  setStats(stats) {
+  setStats(source, stats) {
     var keys = Object.keys(stats);
+
+    var sts = source === 'sth' ? this.statsSTH : this.statsStore;
     for (let i = 0; i < keys.length; ++i) {
       let key = keys[i];
       if (key.startsWith('sales')) {
-        this.stats[key] = `$${parseInt(stats[key]).toLocaleString()}`;
+        sts[key] = `$${parseInt(stats[key]).toLocaleString()}`;
       } else {
-        this.stats[key] = stats[key];
+        sts[key] = stats[key];
       }
     }
-    this.stats['aov7'] = `$${parseFloat(stats['aov7']).toFixed(2)}`;
-    this.stats['productStats'] = this.parseProductStats(stats.products);
+    sts['aov7'] = `$${parseFloat(stats['aov7']).toFixed(2)}`;
+    sts['productStats'] = this.parseProductStats(stats.products);
 
   }
 
   parseProductStats(pStats) {
     return `${pStats['Prints']} / ${pStats['Posters']} / ${pStats['Canvas']}`;
   }
-  getStats() {
-    return this.stats;
+  getStats(source) {
+    return source === 'sth' ? this.statsSTH : this.statsStore;
   }
 }

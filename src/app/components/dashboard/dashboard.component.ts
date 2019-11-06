@@ -33,7 +33,7 @@ export class DashboardComponent implements OnInit {
     //   return;
     // }
     this.orders = this.ordersService.getOrders('sth');
-    this.stats = this.statsService.getStats();
+    this.stats = this.statsService.getStats('sth');
     this.searchForm = this.formBuilder.group({
       orderId: ''
     });
@@ -50,7 +50,7 @@ export class DashboardComponent implements OnInit {
       this.orders = this.ordersService.getOrders('sth');
     });
     this.dbapi.fetchStats('sth', () => {
-      this.stats = this.statsService.getStats();
+      this.stats = this.statsService.getStats('sth');
     });
   }
 

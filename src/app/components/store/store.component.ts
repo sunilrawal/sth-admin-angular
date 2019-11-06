@@ -28,7 +28,7 @@ export class StoreComponent implements OnInit {
     private formBuilder: FormBuilder,
   ) { 
     this.orders = this.ordersService.getOrders('store');
-    this.stats = this.statsService.getStats();
+    this.stats = this.statsService.getStats('store');
     this.searchForm = this.formBuilder.group({
       orderId: ''
     });
@@ -40,26 +40,10 @@ export class StoreComponent implements OnInit {
   }
 
   refreshData() {
-    this.dbapi.fetchOrders('store', (orders) => {
-      this.ordersService.setOrders('store', orders);
-      this.orders = this.ordersService.getOrders('store');
-    });
     this.dbapi.fetchStats('store', () => {
-      this.stats = this.statsService.getStats();
+      this.stats = this.statsService.getStats('store');
     });
   }
 
-  onSubmit(searchData) {
-    // Process checkout data here
-    let orderId = searchData.orderId;
-    this.searchMessageDisplay = 'd-none';
-    this.ordersService.find('store', orderId, (order) => {
-      if (order) {
-        this.router.navigate(['/orders', orderId]);
-      } else {
-        this.searchMessageDisplay = 'd-inline';
-      }
-    });
-  }
 
 }
