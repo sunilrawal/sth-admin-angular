@@ -27,6 +27,10 @@ export class StoreComponent implements OnInit {
     private router: Router,
     private formBuilder: FormBuilder,
   ) { 
+    if (!this.loginService.isLoggedIn()) {
+      router.navigate(['/']);
+      return;
+    }
     this.orders = this.ordersService.getOrders('store');
     this.stats = this.statsService.getStats('store');
     this.searchForm = this.formBuilder.group({

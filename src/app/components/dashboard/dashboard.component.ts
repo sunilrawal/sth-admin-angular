@@ -28,10 +28,10 @@ export class DashboardComponent implements OnInit {
     private router: Router,
     private formBuilder: FormBuilder,
   ) { 
-    // if (!this.loginService.isLoggedIn()) {
-    //   router.navigate(['/']);
-    //   return;
-    // }
+    if (!this.loginService.isLoggedIn()) {
+      router.navigate(['/']);
+      return;
+    }
     this.orders = this.ordersService.getOrders('sth');
     this.stats = this.statsService.getStats('sth');
     this.searchForm = this.formBuilder.group({

@@ -28,9 +28,14 @@ export class OrdersService {
     ods.sort((a, b) => (a.date < b.date) ? 1 : -1);
     if (source === 'sth') {
       this.sthOrders = ods;
+      console.log(`${this.sthOrders.length} STH orders now`);
     } else {
       this.storeOrders = ods;
+      console.log(`${this.sthOrders.length} store orders now`);
     }
+
+
+
   }
 
   setOrder(source, order) {
@@ -72,8 +77,13 @@ export class OrdersService {
       }
     }
 
-    this.dbapi.fetchOrder(source, orderId, (order) => {
-      const o = Order.from(order);
+    this.dbapi.fetchOrdersByOrderId(source, orderId, (orders) => {
+      if (orders.length == 0) {
+        callback(undefined);
+        return;
+      }
+
+      const o = Order.from(orders[0]);
       this.setOrder(source, o);
       callback(o);
     });

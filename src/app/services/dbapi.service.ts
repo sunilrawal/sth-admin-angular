@@ -66,7 +66,7 @@ export class DBApiService {
     );
   }
 
-  fetchOrder(source, orderId, callback) {
+  fetchOrdersByOrderId(source, orderId, callback) {
     const requestOptions = {                                                                
       headers: new HttpHeaders(this.headerDict()), 
     };
@@ -75,10 +75,10 @@ export class DBApiService {
     let url = `https://api.jpeglabs.com/v1/photo-orders?tableName=${tableName}&q=orders&orderId=${orderId}`;
     this.http.get(url, requestOptions).subscribe(
       data => {
-        callback(data['order']);
+        callback(data['results']);
       },
       error => {
-        callback({});
+        callback([]);
       }
     );
   }
