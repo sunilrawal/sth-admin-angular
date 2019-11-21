@@ -40,7 +40,7 @@
             </div>
             <div class="col-6">
               <p class='text-left'>{{ order.name }}</p>
-              <p class='text-left'>{{ order.pickup_store.address }}</p>
+              <p class='text-left'><a href='{{ order.address_google_link() }}' target='_address'>{{ order.pickup_store.address }}</a></p>
             </div>
           </div>
 

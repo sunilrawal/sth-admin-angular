@@ -115,4 +115,9 @@ export class Order {
     `https://www.fedex.com/apps/fedextrack/?tracknumbers=${tn}&cntry_code=us` :
     `https://www.ups-mi.net/packageID/packageid.aspx?pid=${tn}`
   }
+
+  address_google_link() {
+    if (!this.pickup_store || !this.pickup_store.address) return '';
+    return `https://www.google.com/search?q=${this.pickup_store.address.replace(' ', '+').replace(',', '%2C')}`;
+  }
 }

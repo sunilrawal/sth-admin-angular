@@ -39,9 +39,18 @@ h4 {
   font-size: 3.0vw !important;
 }
 
-h3, h4 {
-  font-weight: lighter;
+
+h5 {
+  font-size: 1.5vw !important;
 }
+
+h3, h4, h5 {
+  font-weight: lighter;
+  line-height: 120px;
+  height:60px;
+  display: inline-block;
+}
+
 
 p {
   font-size: 14px;
