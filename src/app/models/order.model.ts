@@ -60,6 +60,8 @@ export class Order {
       case '6080002':
       case '6080003':
       case '6080005':
+      case '5x5':
+      case 'PRGift;5343':
       case '?':
         return 'Prints';
       case 'PRGift;4113':
@@ -79,6 +81,7 @@ export class Order {
       case '6080016':
         return 'Canvas';
       default:
+        console.log(`**${productId}**`)
         return 'Unknown';
     }
   }
