@@ -6,7 +6,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { TopBarComponent } from './components/top-bar/top-bar.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { StoreComponent } from './components/store/store.component';
+import { SthComponent } from './components/sth/sth.component';
+import { WalgreensComponent } from './components/walgreens/walgreens.component';
+import { CvsComponent } from './components/cvs/cvs.component';
 import { MenuBarComponent } from './components/menu-bar/menu-bar.component';
 import { DBApiService } from './services/dbapi.service';
 import { HttpClientModule } from '@angular/common/http';
@@ -23,8 +25,9 @@ import { OrdersService } from './services/orders.service';
     ReactiveFormsModule,
     RouterModule.forRoot([
       { path: '', component: LoginComponent },
-      { path: 'dashboard', component: DashboardComponent },
-      { path: 'store', component: StoreComponent },
+      { path: 'sth', component: SthComponent },
+      { path: 'walgreens', component: WalgreensComponent },
+      { path: 'cvs', component: CvsComponent },
       { path: 'orders/:orderId', component: OrderComponent },
     ],
     { scrollPositionRestoration: 'enabled' })
@@ -33,7 +36,9 @@ import { OrdersService } from './services/orders.service';
     AppComponent,
     TopBarComponent,
     DashboardComponent,
-    StoreComponent,
+    SthComponent,
+    WalgreensComponent,
+    CvsComponent,
     OrderComponent,
     LoginComponent,
     MenuBarComponent

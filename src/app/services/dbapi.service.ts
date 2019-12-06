@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { StatsService } from '../services/stats.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,19 +9,15 @@ export class DBApiService {
 
   orders = [];
   since : Date;
-  lastCheckOrdersSTH: Date;
-  lastCheckStatsSTH: Date;
-  lastCheckOrdersStore: Date;
-  lastCheckStatsStore: Date;
+  lastCheckOrders: any;
+  lastCheckStats: any;
 
   constructor(
     private http: HttpClient,
-    private statsService : StatsService,
   ) { 
-    this.lastCheckOrdersSTH = new Date(2019, 1, 1);
-    this.lastCheckOrdersStore = new Date(2019, 1, 1);
-    this.lastCheckStatsSTH = new Date(2019, 1, 1);
-    this.lastCheckStatsStore = new Date(2019, 1, 1);
+    const dt = new Date(2019, 1, 1);
+    this.lastCheckOrders = {sth: dt, walgreens: dt, cvs: dt};
+    this.lastCheckStats = {sth: dt, walgreens: dt, cvs: dt};
   }
 
   private headerDict() {
@@ -32,25 +27,25 @@ export class DBApiService {
     };
   }
 
+  baseUrl() {
+    return 'https://api.jpeglabs.com/v1';
+  }
+  
   fetchOrders(source, callback) {
-    const dt = source === 'sth' ? this.lastCheckOrdersSTH : this.lastCheckOrdersStore;
+    const dt = this.lastCheckOrders[source];
     if ((new Date()).getTime() - dt.getTime() < 60000) {
       callback();
       return;
     }
 
-    if (source === 'sth') { 
-      this.lastCheckOrdersSTH = new Date();
-    } else {
-      this.lastCheckOrdersStore = new Date();
-    }
+    this.lastCheckOrders[source] = new Date();
 
     const requestOptions = {                                                                
       headers: new HttpHeaders(this.headerDict()), 
     };
 
-    const tableName = source === 'store' ? 'photoorders' : 'sthorders';
-    let url = `https://api.jpeglabs.com/v1/photo-orders?tableName=${tableName}&q=orders&`;
+    const tableName = source === 'sth' ? 'sthorders' : 'photoorders';
+    let url = `${this.baseUrl()}/photo-orders?tableName=${tableName}&q=orders&`;
     if (this.since) url += `since=${this.since.toISOString()}`;
 
     this.http.get(url, requestOptions).subscribe(
@@ -71,8 +66,8 @@ export class DBApiService {
       headers: new HttpHeaders(this.headerDict()), 
     };
 
-    const tableName = source === 'store' ? 'photoorders' : 'sthorders';
-    let url = `https://api.jpeglabs.com/v1/photo-orders?tableName=${tableName}&q=orders&orderId=${orderId}`;
+    const tableName = source === 'sth' ? 'sthorders' : 'photoorders';
+    let url = `${this.baseUrl()}/photo-orders?tableName=${tableName}&q=orders&orderId=${orderId}`;
     this.http.get(url, requestOptions).subscribe(
       data => {
         callback(data['results']);
@@ -84,28 +79,23 @@ export class DBApiService {
   }
 
   fetchStats(source, callback) {
-    const dt = source === 'sth' ? this.lastCheckStatsSTH : this.lastCheckStatsStore;
+    const dt = this.lastCheckStats[source];
     if ((new Date()).getTime() - dt.getTime() < 60000) {
-      callback();
+      callback({});
       return;
     }
 
-    if (source === 'sth') { 
-      this.lastCheckStatsSTH = new Date();
-    } else {
-      this.lastCheckStatsStore = new Date();
-    }
+    this.lastCheckStats[source] = new Date();
 
     const requestOptions = {                                                                
       headers: new HttpHeaders(this.headerDict()), 
     };
   
-    const tableName = source === 'store' ? 'photoorders' : 'sthorders';
-    let url = `https://api.jpeglabs.com/v1/photo-orders?tableName=${tableName}&q=stats`;
+    const tableName = source === 'sth' ? 'sthorders' : 'photoorders';
+    let url = `${this.baseUrl()}/photo-orders?tableName=${tableName}&source=${source}&q=stats`;
     this.http.get(url, requestOptions).subscribe(
       data => {
-        this.statsService.setStats(source, data['results']);
-        callback();
+        callback(data['results']);
       },
       error => {
         console.log(error);
@@ -118,7 +108,7 @@ export class DBApiService {
     const requestOptions = {                                                                
       headers: new HttpHeaders(this.headerDict()), 
     };
-    let url = `https://api.jpeglabs.com/v1/sth-login?client=STHAdminWeb&&pwd=${pwd}`;
+    let url = `${this.baseUrl()}/sth-login?client=STHAdminWeb&&pwd=${pwd}`;
     this.http.get(url, requestOptions).subscribe(
       data => {
         const ok = data['status'] === 'ok';

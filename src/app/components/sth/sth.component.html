@@ -1,0 +1,84 @@
+<menu-bar menu="shiptohome"></menu-bar>
+
+<app-dashboard source="sth"></app-dashboard>
+
+<div class="row">
+  <div class="col-12">
+
+    <div class="panel panel-primary border">
+      
+      <div class="panel-heading pt-2 pb-2">
+        <div class="row">
+          <div class="col-6 text-left"><h2 class="pl-2">Orders</h2></div>
+          <div class="col-6 text-right">
+            <form [formGroup]="searchForm" (ngSubmit)="onSubmit(searchForm.value)">
+              <span class="mr-2">
+                <input type="text" formControlName="orderId">
+                <button class="button" type="submit">Find</button>
+                <span class="{{ searchMessageDisplay }} pl-2">Not found</span>
+              </span>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-body">
+
+        <div class="row">
+          <div class="col-3">
+            <div class="font-weight-bold  small">Order ID</div>
+          </div>
+          <div class="col-2">
+            <div class="font-weight-bold  small">$</div>
+          </div>
+          <div class="col-2">
+            <div class="font-weight-bold  small">Date</div>
+          </div>
+          <div class="col-2">
+            <div class="font-weight-bold small">Products</div>
+          </div>
+          <div class="col-3">
+            <div class="font-weight-bold small">First image</div>
+          </div>
+        </div>
+
+        <div class="order-item" *ngFor="let order of orders">
+          <div class="row border-bottom">
+            <div class="col-3">
+              <div><small><a target='_' [routerLink]="['/orders', order.order_id]">{{ order.order_id }}</a></small></div>
+              <div><small>({{ order.status }})</small></div>
+              <div *ngIf="order.status === 'Shipped'">
+                  <div *ngFor="let tn of order.getTrackingNumbers()">
+                    <p class='text-center'><small>
+                      <a target="_" href="{{ order.getTrackingLink(tn) }}">{{ tn }}</a>
+                      </small></p>
+                  </div>
+              </div>
+            </div>
+            <div class="col-2">
+              <div><small>{{ order.amount.toFixed(2) }}</small></div>
+            </div>
+            <div class="col-2">
+              <div><small>{{ order.date.toLocaleString() }}</small></div>
+            </div>
+            <div class="col-2">
+              <div><small>{{ order.products }}</small></div>
+            </div>
+            <div class="col-3">
+              <div>
+                <a target='_' [routerLink]="['/orders', order.order_id]" >
+                  <img class="thumb" src="{{ order.getImages().length > 0 ? order.getImages()[0].url : '' }}">
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    
+    </div>
+    
+  </div>
+</div>
+  
+
