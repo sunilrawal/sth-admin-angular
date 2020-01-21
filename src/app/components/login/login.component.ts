@@ -20,9 +20,9 @@ export class LoginComponent implements OnInit {
     private loginService : LoginService,
     private statsService : StatsService
   ) { 
-        this.loginForm = this.formBuilder.group({
-          pwd: ''
-        });
+      this.loginForm = this.formBuilder.group({
+        pwd: ''
+      });
   }
   
 
@@ -37,11 +37,12 @@ export class LoginComponent implements OnInit {
     this.loginService.login(pwd, (success : boolean) => {
       if (success) {
         this.statsService.start();
-        this.router.navigate(['/sth']);
+        this.router.navigate(['/dashboard']);
       } else {
         this.loginMessageDisplay = 'd-inline';
       }
     });
   }
+
 
 }

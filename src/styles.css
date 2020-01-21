@@ -96,11 +96,9 @@ app-top-bar h1 {
   margin: 0;
 }
 
-
 .panel-primary{
   margin-top: 1em !important;
 }
-
 
 .panel-primary .panel-heading {
   background-color: #EEE !important;
@@ -112,4 +110,16 @@ app-top-bar h1 {
 
 .thumb {
   width: 14vw;
+}
+
+.panel-graph {
+  width: 500px;
+  height: 300px;
+  margin-top: 1em !important;
+  border-radius: 10px;
+  background:#eee;
+}
+
+.graph-tooltip-text {
+  color: #fff;
 }

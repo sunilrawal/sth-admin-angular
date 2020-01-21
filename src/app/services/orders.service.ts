@@ -68,25 +68,31 @@ export class OrdersService {
     return source === 'sth' ? this.sthOrders : this.storeOrders;
   }
 
-  find(source, orderId, callback) {
+  find(source, identifier, callback) {
     const sourceOrders = source === 'sth' ? this.sthOrders : this.storeOrders;
     for (let i = 0; i < sourceOrders.length; ++i) {
-      if (sourceOrders[i].order_id === orderId) {
-        callback(sourceOrders[i]);
+      if (sourceOrders[i].order_id === identifier) {
+        console.log(`Found cached order ${identifier}`);
+        callback([sourceOrders[i]]);
         return;
       }
     }
 
-    this.dbapi.fetchOrdersByOrderId(source, orderId, (orders) => {
+    this.dbapi.fetchOrdersByOrderId(source, identifier, (orders) => {
       if (orders.length == 0) {
-        callback(undefined);
+        callback([]);
         return;
       }
 
-      const o = Order.from(orders[0]);
-      this.setOrder(source, o);
-      callback(o);
+      const ods = [];
+      for (let i = 0; i < orders.length; i += 1) {
+        const o = Order.from(orders[i]);
+        ods.push(o);
+      }
+      callback(ods);
     });
 
   }
 }
+
+// SHF-iZYST

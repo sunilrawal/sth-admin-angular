@@ -17,7 +17,7 @@ export class DBApiService {
   ) { 
     const dt = new Date(2019, 1, 1);
     this.lastCheckOrders = {sth: dt, walgreens: dt, cvs: dt};
-    this.lastCheckStats = {sth: dt, walgreens: dt, cvs: dt};
+    this.lastCheckStats = {sth: dt, walgreens: dt, cvs: dt, all: dt};
   }
 
   private headerDict() {
@@ -28,12 +28,12 @@ export class DBApiService {
   }
 
   baseUrl() {
-    return 'https://api.jpeglabs.com/v1';
+    return 'https://apidev.jpeglabs.com/v1';
   }
   
   fetchOrders(source, callback) {
     const dt = this.lastCheckOrders[source];
-    if ((new Date()).getTime() - dt.getTime() < 60000) {
+    if ((new Date()).getTime() - dt.getTime() < 300000) {
       callback();
       return;
     }
@@ -61,13 +61,14 @@ export class DBApiService {
     );
   }
 
-  fetchOrdersByOrderId(source, orderId, callback) {
+  fetchOrdersByOrderId(source, identifier, callback) {
     const requestOptions = {                                                                
       headers: new HttpHeaders(this.headerDict()), 
     };
 
     const tableName = source === 'sth' ? 'sthorders' : 'photoorders';
-    let url = `${this.baseUrl()}/photo-orders?tableName=${tableName}&q=orders&orderId=${orderId}`;
+    let url = `${this.baseUrl()}/photo-orders?tableName=${tableName}&q=orders&identifier=${identifier}`;
+    console.log(url);
     this.http.get(url, requestOptions).subscribe(
       data => {
         callback(data['results']);
@@ -80,7 +81,7 @@ export class DBApiService {
 
   fetchStats(source, callback) {
     const dt = this.lastCheckStats[source];
-    if ((new Date()).getTime() - dt.getTime() < 60000) {
+    if ((new Date()).getTime() - dt.getTime() < 300000) {
       callback({});
       return;
     }
@@ -90,9 +91,11 @@ export class DBApiService {
     const requestOptions = {                                                                
       headers: new HttpHeaders(this.headerDict()), 
     };
-  
-    const tableName = source === 'sth' ? 'sthorders' : 'photoorders';
+    let tableName = source === 'sth' ? 'sthorders' : 'photoorders';
+    if (source === 'all') tableName = 'daily_stats';
+
     let url = `${this.baseUrl()}/photo-orders?tableName=${tableName}&source=${source}&q=stats`;
+    console.log(`Fetch stats: ${url}`);
     this.http.get(url, requestOptions).subscribe(
       data => {
         callback(data['results']);

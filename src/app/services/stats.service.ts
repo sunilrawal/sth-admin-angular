@@ -9,12 +9,13 @@ import { DBApiService } from './dbapi.service';
 export class StatsService {
 
   stats = {
-    'sth': {salesToday: '-', salesYesterday: '-', salesSevenDays: '-', salesAllTime: '-', aov7: '-', salesMtd: '-',
+    'sth': {salesToday: '-', salesYesterday: '-', sales7: '-', salesAllTime: '-', aov7: '-', salesMtd: '-',
     ordersToday: '-', customersToday: '-', repeats7: '-', productStats: '-', appCounts: '-'},
-    'walgreens': {salesToday: '-', salesYesterday: '-', salesSevenDays: '-', salesAllTime: '-', aov7: '-', salesMtd: '-',
+    'walgreens': {salesToday: '-', salesYesterday: '-', sales7: '-', salesAllTime: '-', aov7: '-', salesMtd: '-',
     ordersToday: '-', customersToday: '-', repeats7: '-', productStats: '-', appCounts: '-'},
-    'cvs': {salesToday: '-', salesYesterday: '-', salesSevenDays: '-', salesAllTime: '-', aov7: '-', salesMtd: '-',
+    'cvs': {salesToday: '-', salesYesterday: '-', sales7: '-', salesAllTime: '-', aov7: '-', salesMtd: '-',
     ordersToday: '-', customersToday: '-', repeats7: '-', productStats: '-', appCounts: '-'},
+    'all': {}
   };
 
   receivers = {};
@@ -26,31 +27,46 @@ export class StatsService {
    }
 
   start() {
-    timer(0, 60000).subscribe(() => this.refreshData());
+    timer(0, 300000).subscribe(() => this.refreshData());
    }
 
   subscribe(source, rx) {
     this.receivers[source] = rx;
    }
 
-  refreshData() {
-    this.fetchStats('sth');
-    this.fetchStats('walgreens');
-    this.fetchStats('cvs');
+  async refreshData() {
+    await this.fetchStats('walgreens');
+    await this.fetchStats('cvs');
+    await this.fetchStats('sth');
+    await this.fetchStats('all');
   }
 
-  fetchStats(source) {
-    this.dbapi.fetchStats(source, (stats) => {
-      console.log(`fetched stats for ${source}`);
-      this.setStats(source, stats);
-      const rx = this.receivers[source];
-      if (rx) rx.statsCallback(this.getStats(source));
+  async fetchStats(source) {
+    console.log(`Fetching stats for ${source}`);
+    return new Promise((resolve) => {
+      this.dbapi.fetchStats(source, (stats) => {
+        if (!stats || Object.keys(stats).length == 0) { 
+          console.log(`Empty response for ${source} stats. Ignoring`);
+          resolve();
+          return;
+        }
+
+        console.log(`Fetched stats for ${source}`);
+        if (source === 'all') this.setDailyStats(stats);
+        else this.setStats(source, stats);
+        const rx = this.receivers[source];
+        if (rx) {
+          const parsedStats = this.getStats(source);
+          rx.statsCallback(parsedStats);
+        }
+        resolve();
+      });
     });
   }
 
+  // take stats from the server and convert them into viewable numbers
   setStats(source, stats) {
     var keys = Object.keys(stats);
-
     var sts = this.stats[source];
     for (let i = 0; i < keys.length; ++i) {
       let key = keys[i];
@@ -63,24 +79,28 @@ export class StatsService {
     sts['aov7'] = `$${parseFloat(stats['aov7']).toFixed(2)}`;
     sts['productStats'] = this.parseProductStats(stats.products);
     sts['appCounts'] = this.parseAppCounts(stats['appCounts']);
+    sts['repeats7'] = (100*parseFloat(stats['repeats7']) / parseFloat(stats['orders7'])).toFixed(0) + '%';
+  }
+
+  setDailyStats(stats) {
+    this.stats['all'] = stats;
   }
 
   parseAppCounts(counts) {
-    console.log(counts);
     if (!counts) return '';
-    
     let total = 0;
     const apps = Object.keys(counts);
     const arry = [];
+    const appNameMap = {'com.jpeglabs.printmatic.cvs.ios':'CVS', 'com.jpeglabs.Print-Photos-Walgreens-Printing-Photos-COSTCO':'Fast', 
+      'com.jpeglabs.Photo-Prints-Walgreens-Printing-Photos-CVS':'EZ', 'com.jpeglabs.printasa.ios':'Printasa'};
     for (let i = 0; i < apps.length; i += 1) {
-      const app = apps[i];
-      const count = parseInt(counts[app]);
+      const count = parseInt(counts[apps[i]]);
       total += count;
     }
 
     for (let i = 0; i < apps.length; i += 1) {
-      const app = apps[i];
-      const count = parseInt(counts[app]);
+      const app = appNameMap[apps[i]];
+      const count = parseInt(counts[apps[i]]);
       const percent = 100*count / total;
       arry.push({app, count, percent});
     }

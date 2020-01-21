@@ -18,6 +18,15 @@
 
           <div class="row">
             <div class="col-6">
+              <div><p class="font-weight-bold">App build</p></div>
+            </div>
+            <div class="col-6">
+              <div><p class='text-left'>{{ order.build }}</p></div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-6">
               <div><p class="font-weight-bold">Status</p></div>
             </div>
             <div class="col-6">
@@ -46,10 +55,10 @@
 
           <div class="row">
             <div class="col-6">
-              <div><p class="font-weight-bold">Email</p></div>
+              <div><p class="font-weight-bold">Info</p></div>
             </div>
             <div class="col-6">
-              <div><p class='text-left'>{{ order.email }}</p></div>
+              <div><p class='text-left'>{{ order.email }} / {{ order.phone }}</p></div>
             </div>
           </div>
 
@@ -59,6 +68,15 @@
             </div>
             <div class="col-6">
               <div><p class='text-left'>${{ order.amount.toFixed(2) }}</p></div>
+            </div>
+          </div>
+
+          <div class="row" *ngIf="order.shipping_charge > 0">
+            <div class="col-6">
+              <div><p class="font-weight-bold">Shipping</p></div>
+            </div>
+            <div class="col-6">
+              <div><p class='text-left'>${{ order.shipping_charge.toFixed(2) }} ({{ order.shipping_string() }})</p></div>
             </div>
           </div>
 

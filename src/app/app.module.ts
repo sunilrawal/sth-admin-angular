@@ -2,10 +2,12 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 import { AppComponent } from './app.component';
 import { TopBarComponent } from './components/top-bar/top-bar.component';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { StatspanelComponent } from './components/statspanel/statspanel.component';
 import { SthComponent } from './components/sth/sth.component';
 import { WalgreensComponent } from './components/walgreens/walgreens.component';
 import { CvsComponent } from './components/cvs/cvs.component';
@@ -17,14 +19,18 @@ import { StatsService } from './services/stats.service';
 import { LoginComponent } from './components/login/login.component';
 import { LoginService } from './services/login.service';
 import { OrdersService } from './services/orders.service';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 
 @NgModule({
   imports: [
     BrowserModule,
     HttpClientModule,
     ReactiveFormsModule,
+    NgxChartsModule,
+    BrowserAnimationsModule ,
     RouterModule.forRoot([
       { path: '', component: LoginComponent },
+      { path: 'dashboard', component: DashboardComponent },
       { path: 'sth', component: SthComponent },
       { path: 'walgreens', component: WalgreensComponent },
       { path: 'cvs', component: CvsComponent },
@@ -36,6 +42,7 @@ import { OrdersService } from './services/orders.service';
     AppComponent,
     TopBarComponent,
     DashboardComponent,
+    StatspanelComponent,
     SthComponent,
     WalgreensComponent,
     CvsComponent,

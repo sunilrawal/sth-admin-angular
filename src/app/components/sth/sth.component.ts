@@ -14,9 +14,11 @@ import { FormBuilder } from '@angular/forms';
 
 export class SthComponent implements OnInit {
 
+  dbOrders;
   orders;
   searchForm;
   searchMessageDisplay = 'd-none';
+  inSearch : boolean = false;
 
   constructor(
     private dbapi : DBApiService,
@@ -31,10 +33,10 @@ export class SthComponent implements OnInit {
     }
     this.orders = this.ordersService.getOrders('sth');
     this.searchForm = this.formBuilder.group({
-      orderId: ''
+      identifier: ''
     });
 
-    timer(0, 60000).subscribe(() => this.refreshData());
+    timer(0, 300000).subscribe(() => this.refreshData());
   }
 
   ngOnInit() {
@@ -42,18 +44,31 @@ export class SthComponent implements OnInit {
 
   refreshData() {
     this.dbapi.fetchOrders('sth', (orders) => {
-      this.ordersService.setOrders('sth', orders);
-      this.orders = this.ordersService.getOrders('sth');
+      this.dbOrders = orders;
+      this.ordersService.setOrders('sth', this.dbOrders);
+      if (!this.inSearch) {
+        this.orders = this.ordersService.getOrders('sth');
+      }
     });
   }
 
-  onSubmit(searchData) {
-    // Process checkout data here
-    let orderId = searchData.orderId;
+  reset() {
+    this.orders = this.ordersService.getOrders('sth');
+    this.searchForm.reset();
+  }
+
+  search(searchData) {
+
+    let identifier = searchData.identifier;
     this.searchMessageDisplay = 'd-none';
-    this.ordersService.find('sth', orderId, (order) => {
-      if (order) {
-        this.router.navigate(['/orders', orderId]);
+    this.ordersService.find('sth', identifier, (orders) => {
+
+      if (orders && orders.length == 1) {
+        this.router.navigate(['/orders', identifier]);
+      } else if (orders && orders.length > 1) {
+        console.log(`Multiple orders from ${identifier} [${orders.length}]`);
+        this.orders = orders;
+        this.inSearch = true;
       } else {
         this.searchMessageDisplay = 'd-inline';
       }

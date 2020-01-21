@@ -8,6 +8,8 @@ export class Order {
   products: string;
   tracking_numbers: string;
   date : Date;
+  shipping_type: string;
+  shipping_charge: number;
 
   static from(obj: any) {
     let o = new Order();
@@ -122,5 +124,9 @@ export class Order {
   address_google_link() {
     if (!this.pickup_store || !this.pickup_store.address) return '';
     return `https://www.google.com/search?q=${this.pickup_store.address.replace(' ', '+').replace(',', '%2C')}`;
+  }
+
+  shipping_string() {
+    return this.shipping_type == 'std' ? 'Standard' : '2-Day';
   }
 }
