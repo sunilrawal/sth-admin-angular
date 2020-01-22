@@ -4,11 +4,114 @@
   <div class="col-12">
 
     <div class="row">
+      <div class="col-12">
+        <h4>Number of orders (7 days)</h4>
+      </div>
+    </div>
+
+    <div class="row">
 
       <div class="col-4">
         <div class="panel-graph">
           <h5>EZPrints</h5>
-          <ngx-charts-line-chart
+          <ngx-charts-line-chart *ngIf="ready"
+            [view]="view"
+            [scheme]="colorScheme"
+            [legend]=true
+            [showXAxisLabel]=true
+            [showYAxisLabel]=true
+            [xAxis]=true
+            [yAxis]=true
+            [xAxisLabel]="xAxisLabels['counts']"
+            [yAxisLabel]="yAxisLabels['counts']"
+            [timeline]=true
+            [results]="countResults['ez']"
+            legendTitle=Orders
+            >
+            <ng-template #tooltipTemplate let-model="model">
+              STH: ${{ model.value }} ({{model.percent}}%)
+            </ng-template>
+            <ng-template #seriesTooltipTemplate let-model="model">
+              <div *ngFor="let mod of model; let i = index">
+                <span class="graph-tooltip-text">{{ mod.series}}: {{ mod.value }} ({{ mod.percent }}%)</span>
+              </div>
+            </ng-template>
+          </ngx-charts-line-chart>
+        </div>
+      </div>
+
+      <div class="col-4">
+        <div class="panel-graph">
+          <h5>FastPrints</h5>
+          <ngx-charts-line-chart *ngIf="ready"
+            [view]=view
+            [scheme]="colorScheme"
+            [legend]=true
+            [showXAxisLabel]=true
+            [showYAxisLabel]=true
+            [xAxis]=true
+            [yAxis]=true
+            [xAxisLabel]="xAxisLabels['counts']"
+            [yAxisLabel]="yAxisLabels['counts']"
+            [timeline]=true
+            [results]="countResults['fast']"
+            legendTitle=Orders
+            >
+            <ng-template #tooltipTemplate let-model="model">
+              <span class="graph-tooltip-text">${{ model.value }} ({{model.percent}}%)</span>
+            </ng-template>
+            <ng-template #seriesTooltipTemplate let-model="model">
+              <div *ngFor="let mod of model; let i = index">
+                <span class="graph-tooltip-text">{{ mod.series}}: {{ mod.value }} ({{ mod.percent }}%)</span>
+              </div>
+            </ng-template>
+          </ngx-charts-line-chart>
+        </div>
+      </div>
+
+      <div class="col-4">
+        <div class="panel-graph">
+          <h5>CVS</h5>
+          <ngx-charts-line-chart *ngIf="ready"
+            [view]="view"
+            [scheme]="colorScheme"
+            [legend]=true
+            [showXAxisLabel]=true
+            [showYAxisLabel]=true
+            [xAxis]=true
+            [yAxis]=true
+            [xAxisLabel]="xAxisLabels['counts']"
+            [yAxisLabel]="yAxisLabels['counts']"
+            [timeline]=true
+            [results]="countResults['cvs']"
+            legendTitle=Orders
+            >
+            <ng-template #tooltipTemplate let-model="model">
+              <span class="graph-tooltip-text">STH: ${{ model.value }} ({{model.percent}}%)</span>
+            </ng-template>
+            <ng-template #seriesTooltipTemplate let-model="model">
+              <div *ngFor="let mod of model; let i = index">
+                <span class="graph-tooltip-text">{{ mod.series}}: {{ mod.value }} ({{ mod.percent }}%)</span>
+              </div>
+            </ng-template>
+          </ngx-charts-line-chart>
+        </div>
+      </div>
+      
+    </div>
+
+    <div class="row">
+      <div class="col-12">
+        <h4>Sales (7 days)</h4>
+      </div>
+    </div>
+
+    <div class="row">
+
+      <div class="col-4">
+        <div class="panel-graph">
+          <h5>EZPrints</h5>
+          <ngx-charts-line-chart *ngIf="ready"
             [view]="view"
             [scheme]="colorScheme"
             [legend]=true
@@ -21,6 +124,8 @@
             [timeline]=true
             [results]="salesResults['ez']"
             legendTitle=Sales
+            xScaleMin=0
+            xScaleMax=6
             >
             <ng-template #tooltipTemplate let-model="model">
               STH: ${{ model.value }} ({{model.percent}}%)
@@ -37,7 +142,7 @@
       <div class="col-4">
         <div class="panel-graph">
           <h5>FastPrints</h5>
-          <ngx-charts-line-chart
+          <ngx-charts-line-chart *ngIf="ready"
             [view]=view
             [scheme]="colorScheme"
             [legend]=true
@@ -66,7 +171,7 @@
       <div class="col-4">
         <div class="panel-graph">
           <h5>CVS</h5>
-          <ngx-charts-line-chart
+          <ngx-charts-line-chart *ngIf="ready"
             [view]="view"
             [scheme]="colorScheme"
             [legend]=true
@@ -92,6 +197,8 @@
         </div>
       </div>
       
+    </div>
+    
   </div>
 
 </div>

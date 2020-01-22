@@ -36,6 +36,7 @@ h3 {
 }
 
 h4 {
+  margin-top: 0.2em !important;
   font-size: 3.0vw !important;
 }
 
@@ -117,7 +118,7 @@ app-top-bar h1 {
   height: 300px;
   margin-top: 1em !important;
   border-radius: 10px;
-  background:#eee;
+  background:#f0f0f0;
 }
 
 .graph-tooltip-text {

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { StatsService } from 'src/app/services/stats.service';
 import { midnightToday, dateToStatsString }  from '../../utils/date_utils';
+import { Router } from '@angular/router';
+import { LoginService } from 'src/app/services/login.service';
 
 @Component({
 	selector: 'dashboard',
@@ -11,31 +13,48 @@ export class DashboardComponent implements OnInit {
 
   stats;
   salesResults;
+  countResults;
+  ready = false;
 
   // graphs
   view: any[] = [500, 300];
   showLabels: boolean = true;
   animations: boolean = true;
-  xAxisLabels = { sales: 'date'};
-  yAxisLabels = { sales: 'sales ($)'};
+  xAxisLabels = { sales: 'date', counts: 'date'};
+  yAxisLabels = { sales: 'sales ($)', counts: 'orders'};
   legendPosition = 'below';
   colorScheme = {
-    domain: ['#5AA454', '#E44D25', '#CFC0BB', '#7aa3e5', '#a8385d', '#aae3f5']
+    domain: ['#E44D25', '#5AA454', '#7aa3e5', '#a8385d', '#aae3f5']
   };
 
   constructor(
-    private statsService : StatsService
-  ) { 
-      this.initializeStats();
-    }
+    private statsService : StatsService,
+    private loginService : LoginService,
+    private router: Router,
+  ) {
+    if (!this.loginService.isLoggedIn()) {
+      router.navigate(['/']);
+      return;
+    } 
+    this.initializeStats();
+  }
     
-  ngOnInit() { 
+  ngOnInit() {
     this.statsService.subscribe('all', this);
     this.statsService.start();
   }
   
   initializeStats() {
-    this.salesResults = {};
+    this.salesResults = { cvs:[], fast:[], ez:[] };
+    this.countResults = { cvs:[], fast:[], ez:[] };
+    const sts = this.statsService.getStats('all');
+
+    if (sts && sts.length > 0) {
+      this.ready = true;
+      this.statsCallback(sts);
+      return;
+    }
+
     const days = [];
     let mt7before = midnightToday();
     mt7before.setDate(mt7before.getDate() - 7);
@@ -43,30 +62,39 @@ export class DashboardComponent implements OnInit {
       let dt = new Date(mt7before);
       dt.setDate(dt.getDate() + i);
       const d = dateToStatsString(dt);
-      days.push({ name: d, value: 100 });
+      days.push({ name: d, value: 0 });
     }
-    this.salesResults['cvs'] = [ days, days ];
+    this.salesResults['ez'] = [ days, days, days ];
+    this.salesResults['fast'] = [ days, days, days ];
+    this.salesResults['cvs'] = [ days, days, days ];
+    this.countResults['ez'] = [ days, days, days ];
+    this.countResults['fast'] = [ days, days, days ];
+    this.countResults['cvs'] = [ days, days, days ];
   }
+
   statsCallback(sts) {
     console.log(`statsCallback for dashboard.all`);
-    this.stats = sts;
-    this.setupGraph('cvs');
-    this.setupGraph('fast');
-    this.setupGraph('ez');
+    this.stats = this.statsService.getStats('all');
+    this.salesResults['cvs'] = this.setupGraph('cvs', 'OrderAmountDay');
+    this.salesResults['fast'] = this.setupGraph('fast', 'OrderAmountDay');
+    this.salesResults['ez'] = this.setupGraph('ez', 'OrderAmountDay');
+    this.countResults['cvs'] = this.setupGraph('cvs', 'OrderCountDay');
+    this.countResults['fast'] = this.setupGraph('fast', 'OrderCountDay');
+    this.countResults['ez'] = this.setupGraph('ez', 'OrderCountDay');
+    this.ready = true;
   }
 
-  setupGraph(app) {
+  setupGraph(app, key) {
     
-    const totalSales = { name: 'Total' };
     const totalSeries = [];
-    const sthSales = { name: 'STH' };
+    const storeSeries = [];
     const sthSeries = [];
 
-    const totals = {};
+    const stores = {};
     const sths = {};
     for (let i = 0; i < this.stats.length; i += 1) {
       const ds = this.stats[i];
-      totals[ds.start_day] = 0
+      stores[ds.start_day] = 0
       sths[ds.start_day] = 0;
     }
 
@@ -78,32 +106,33 @@ export class DashboardComponent implements OnInit {
     }
     for (let i = 0; i < this.stats.length; i += 1) {
       const ds = this.stats[i];
-      if (ds.app_name === app_name && ds.key === 'OrderAmountDay' && ds.source === 'photoorders') {
-        totals[ds.start_day] += ds.value;
+      if (ds.app_name === app_name && ds.key === key && ds.source === 'photoorders') {
+        stores[ds.start_day] = ds.value;
       }
 
-      if (ds.app_name === app_name && ds.key === 'OrderAmountDay' && ds.source === 'sthorders') {
+      if (ds.app_name === app_name && ds.key === key && ds.source === 'sthorders') {
         sths[ds.start_day] = ds.value;
-        totals[ds.start_day] += ds.value;
       }
     }
 
-    const days = Object.keys(totals).sort();
+    const days = Object.keys(stores).sort();
     for (let i = 0; i < days.length; i += 1) {
       const dayInfo = days[i].split('-');
       const day = `${dayInfo[1]}/${dayInfo[2]}`;
-      const total = totals[days[i]];
+      const store = stores[days[i]]
       const sth = sths[days[i]];
-      const percent = (100*sth/total).toFixed(0);
+      const total = store + sth;
+      const storePercent = (100*store/total).toFixed(0);
+      const sthPercent = (100*sth/total).toFixed(0);
       totalSeries.push({ name: day, value: total.toFixed(0), percent: '100' });
-      sthSeries.push({ name: day, value: sth.toFixed(0), percent });
+      storeSeries.push({ name: day, value: store.toFixed(0), percent: storePercent });
+      sthSeries.push({ name: day, value: sth.toFixed(0), sthPercent });
     }
-    totalSales['series'] = totalSeries;
-    sthSales['series'] = sthSeries;
 
-    this.salesResults[app] = [
-      totalSales,
-      sthSales,
+    return [
+      { name: 'Total', series: totalSeries },
+      { name: 'Store', series: storeSeries },
+      { name: 'STH', series: sthSeries }
     ];
 
   }
