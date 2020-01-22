@@ -14,14 +14,14 @@ export class DashboardComponent implements OnInit {
   stats;
   salesResults;
   countResults;
+  profitResults;
   ready = false;
 
   // graphs
-  view: any[] = [500, 300];
+  view: any[] = [500, 260];
   showLabels: boolean = true;
   animations: boolean = true;
-  xAxisLabels = { sales: 'date', counts: 'date'};
-  yAxisLabels = { sales: 'sales ($)', counts: 'orders'};
+  yAxisLabels = { sales: 'sales ($)', counts: 'orders', profits: 'profit'};
   legendPosition = 'below';
   colorScheme = {
     domain: ['#E44D25', '#5AA454', '#7aa3e5', '#a8385d', '#aae3f5']
@@ -47,6 +47,7 @@ export class DashboardComponent implements OnInit {
   initializeStats() {
     this.salesResults = { cvs:[], fast:[], ez:[] };
     this.countResults = { cvs:[], fast:[], ez:[] };
+    this.profitResults = { cvs:[], fast:[], ez:[] };
     const sts = this.statsService.getStats('all');
 
     if (sts && sts.length > 0) {
@@ -64,27 +65,30 @@ export class DashboardComponent implements OnInit {
       const d = dateToStatsString(dt);
       days.push({ name: d, value: 0 });
     }
-    this.salesResults['ez'] = [ days, days, days ];
-    this.salesResults['fast'] = [ days, days, days ];
-    this.salesResults['cvs'] = [ days, days, days ];
-    this.countResults['ez'] = [ days, days, days ];
-    this.countResults['fast'] = [ days, days, days ];
-    this.countResults['cvs'] = [ days, days, days ];
+    const apps = ['ez', 'fast', 'cvs'];
+    const res = [ days, days, days ];
+    for (let i = 0; i < apps.length; i += 1) {
+      const app = apps[i];
+      this.salesResults[app] = res;
+      this.countResults[app] = res;
+      this.profitResults[app] = res;
+    }
   }
 
   statsCallback(sts) {
     console.log(`statsCallback for dashboard.all`);
     this.stats = this.statsService.getStats('all');
-    this.salesResults['cvs'] = this.setupGraph('cvs', 'OrderAmountDay');
-    this.salesResults['fast'] = this.setupGraph('fast', 'OrderAmountDay');
-    this.salesResults['ez'] = this.setupGraph('ez', 'OrderAmountDay');
-    this.countResults['cvs'] = this.setupGraph('cvs', 'OrderCountDay');
-    this.countResults['fast'] = this.setupGraph('fast', 'OrderCountDay');
-    this.countResults['ez'] = this.setupGraph('ez', 'OrderCountDay');
+    const apps = ['ez', 'fast', 'cvs'];
+    for (let i = 0; i < apps.length; i += 1) {
+      const app = apps[i];
+      this.salesResults[app] = this.setupGraph(app, 'OrderAmountDay', false);
+      this.countResults[app] = this.setupGraph(app, 'OrderCountDay', false);
+      this.profitResults[app] = this.setupGraph(app, 'OrderAmountDay', true);
+    }
     this.ready = true;
   }
 
-  setupGraph(app, key) {
+  setupGraph(app, key, profit) {
     
     const totalSeries = [];
     const storeSeries = [];
@@ -107,11 +111,13 @@ export class DashboardComponent implements OnInit {
     for (let i = 0; i < this.stats.length; i += 1) {
       const ds = this.stats[i];
       if (ds.app_name === app_name && ds.key === key && ds.source === 'photoorders') {
-        stores[ds.start_day] = ds.value;
+        const multiplier = profit ? (app==='cvs'?0.15:0.225) : 1.0;
+        stores[ds.start_day] = multiplier*ds.value;
       }
 
       if (ds.app_name === app_name && ds.key === key && ds.source === 'sthorders') {
-        sths[ds.start_day] = ds.value;
+        const multiplier = profit ? 0.48 : 1.0;
+        sths[ds.start_day] = multiplier*ds.value;
       }
     }
 
@@ -126,7 +132,7 @@ export class DashboardComponent implements OnInit {
       const sthPercent = (100*sth/total).toFixed(0);
       totalSeries.push({ name: day, value: total.toFixed(0), percent: '100' });
       storeSeries.push({ name: day, value: store.toFixed(0), percent: storePercent });
-      sthSeries.push({ name: day, value: sth.toFixed(0), sthPercent });
+      sthSeries.push({ name: day, value: sth.toFixed(0), percent: sthPercent });
     }
 
     return [

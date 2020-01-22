@@ -28,7 +28,7 @@ export class DBApiService {
   }
 
   baseUrl() {
-    return 'https://apidev.jpeglabs.com/v1';
+    return 'https://api.jpeglabs.com/v1';
   }
   
   fetchOrders(source, callback) {
