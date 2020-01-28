@@ -36,7 +36,6 @@ export class LoginComponent implements OnInit {
 
     this.loginService.login(pwd, (success : boolean) => {
       if (success) {
-        this.statsService.start();
         this.router.navigate(['/dashboard']);
       } else {
         this.loginMessageDisplay = 'd-inline';

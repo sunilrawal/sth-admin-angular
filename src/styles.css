@@ -25,6 +25,12 @@ router-outlet + *  {
 .title-text-1 {
   font-size: 28px;
   display: inline-block;
+  margin-top: 1em !important;
+}
+
+.title-text-2 {
+  font-size: 20px;
+  display: inline-block;
   margin-top: 0.2em !important;
 }
 
@@ -96,6 +102,10 @@ menu-bar {
   margin-right: -15px;
 }
 
+.center-items {
+  align-items: center;
+  text-align: center;
+}
 app-top-bar h1 {
   color: white;
   margin: 0;
@@ -119,10 +129,21 @@ app-top-bar h1 {
 
 .panel-graph {
   width: 500px;
-  height: 300px;
+  height: 260px;
   margin-top: 1em !important;
   border-radius: 10px;
-  background:#f0f0f0;
+  background:#FAFAFA;
+  display: inline-block;
+}
+
+.panel-graph-totals {
+  width: 500px;
+  height: 320px;
+  margin-top: 1em !important;
+  border-radius: 10px;
+  background:#FAFAFA;
+  display: inline-block;
+  margin-bottom: 2em;
 }
 
 .graph-tooltip-text {

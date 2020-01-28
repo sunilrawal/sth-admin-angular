@@ -25,7 +25,7 @@ export class StatspanelComponent implements OnInit {
     this.statsService.subscribe(this.source, this);
   }
 
-  statsCallback(sts) {
+  statsCallback(source, tableName, sts) {
     console.log(`statsCallback for statspanel.${this.source}`);
     this.stats = sts;
   }

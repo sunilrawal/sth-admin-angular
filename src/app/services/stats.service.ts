@@ -15,7 +15,8 @@ export class StatsService {
     ordersToday: '-', customersToday: '-', repeats7: '-', productStats: '-', appCounts: '-'},
     'cvs': {salesToday: '-', salesYesterday: '-', sales7: '-', salesAllTime: '-', aov7: '-', salesMtd: '-',
     ordersToday: '-', customersToday: '-', repeats7: '-', productStats: '-', appCounts: '-'},
-    'all': {}
+    'all': {},
+    'today_sales': {}
   };
 
   receivers = {};
@@ -35,29 +36,32 @@ export class StatsService {
    }
 
   async refreshData() {
-    await this.fetchStats('walgreens');
-    await this.fetchStats('cvs');
-    await this.fetchStats('sth');
-    await this.fetchStats('all');
+    await this.fetchStats('stats', 'walgreens', 'photoorders');
+    await this.fetchStats('stats', 'cvs', 'photoorders');
+    await this.fetchStats('stats', 'sth', 'sthorders');
+    await this.fetchStats('stats', 'all', 'daily_stats');
+    await this.fetchStats('today_sales', 'today_sales', 'sthorders');
+    await this.fetchStats('today_sales', 'today_sales', 'photoorders');
   }
 
-  async fetchStats(source) {
-    console.log(`Fetching stats for ${source}`);
+  async fetchStats(q, source, tableName) {
+    console.log(`Fetching stats for ${q}/${source}/${tableName}`);
     return new Promise((resolve) => {
-      this.dbapi.fetchStats(source, (stats) => {
+      this.dbapi.fetchStats(q, source, tableName, (stats) => {
         if (!stats || Object.keys(stats).length == 0) { 
-          console.log(`Empty response for ${source} stats. Ignoring`);
+          //console.log(`Empty response for ${q}/${source}/${tableName}. Ignoring`);
           resolve();
           return;
         }
 
-        console.log(`Fetched stats for ${source}`);
+        console.log(`--success for ${q}/${source}/${tableName}`);
         if (source === 'all') this.setDailyStats(stats);
+        else if (q === 'today_sales') this.setTodaySales(stats);
         else this.setStats(source, stats);
         const rx = this.receivers[source];
         if (rx) {
           const parsedStats = this.getStats(source);
-          rx.statsCallback(parsedStats);
+          rx.statsCallback(source, tableName, parsedStats);
         }
         resolve();
       });
@@ -83,7 +87,12 @@ export class StatsService {
   }
 
   setDailyStats(stats) {
+    stats.sort((a, b) => b.start_day < a.start_day ? -1 : b.start_day === a.start_day ? 0 : 1)
     this.stats['all'] = stats;
+  }
+
+  setTodaySales(stats) {
+    this.stats['today_sales'] = stats;
   }
 
   parseAppCounts(counts) {

@@ -81,6 +81,7 @@ export class Order {
       case '6080013':
       case '6080015':
       case '6080016':
+      case 'PRGift;5138':
         return 'Canvas';
       default:
         console.log(`**${productId}**`)

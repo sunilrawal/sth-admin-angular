@@ -17,7 +17,7 @@ export class DBApiService {
   ) { 
     const dt = new Date(2019, 1, 1);
     this.lastCheckOrders = {sth: dt, walgreens: dt, cvs: dt};
-    this.lastCheckStats = {sth: dt, walgreens: dt, cvs: dt, all: dt};
+    this.lastCheckStats = {};
   }
 
   private headerDict() {
@@ -33,7 +33,7 @@ export class DBApiService {
   
   fetchOrders(source, callback) {
     const dt = this.lastCheckOrders[source];
-    if ((new Date()).getTime() - dt.getTime() < 300000) {
+    if (dt && (new Date()).getTime() - dt.getTime() < 300000) {
       callback();
       return;
     }
@@ -79,23 +79,22 @@ export class DBApiService {
     );
   }
 
-  fetchStats(source, callback) {
-    const dt = this.lastCheckStats[source];
-    if ((new Date()).getTime() - dt.getTime() < 300000) {
+  fetchStats(q, source, tableName, callback) {
+    const key = `${q}/${source}/${tableName}`;
+    const dt = this.lastCheckStats[key];
+    if (dt && (new Date()).getTime() - dt.getTime() < 300000) {
       callback({});
       return;
     }
 
-    this.lastCheckStats[source] = new Date();
+    this.lastCheckStats[key] = new Date();
 
     const requestOptions = {                                                                
       headers: new HttpHeaders(this.headerDict()), 
     };
-    let tableName = source === 'sth' ? 'sthorders' : 'photoorders';
-    if (source === 'all') tableName = 'daily_stats';
 
-    let url = `${this.baseUrl()}/photo-orders?tableName=${tableName}&source=${source}&q=stats`;
-    console.log(`Fetch stats: ${url}`);
+    let url = `${this.baseUrl()}/photo-orders?tableName=${tableName}&source=${source}&q=${q}`;
+    console.log(`fetchStats: ${url}`);
     this.http.get(url, requestOptions).subscribe(
       data => {
         callback(data['results']);
