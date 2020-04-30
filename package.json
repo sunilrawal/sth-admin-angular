@@ -6,7 +6,7 @@
     "rxjs": "6.5.2",
     "tslib": "1.10.0",
     "events": "3.0.0",
-    "jquery": "3.4.1",
+    "jquery": "3.5.0",
     "core-js": "2.6.9",
     "zone.js": "0.9.1",
     "bootstrap": "4.3.1",
