@@ -49,7 +49,7 @@ export class StatsService {
     return new Promise((resolve) => {
       this.dbapi.fetchStats(q, source, tableName, (stats) => {
         if (!stats || Object.keys(stats).length == 0) { 
-          //console.log(`Empty response for ${q}/${source}/${tableName}. Ignoring`);
+          console.log(`Empty response for ${q}/${source}/${tableName}. Ignoring`);
           resolve();
           return;
         }

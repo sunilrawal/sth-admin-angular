@@ -70,6 +70,7 @@ export class Order {
       case 'PRGift;4214':
       case 'PRGift;4110':
       case 'PRGift;5907':
+      case '20x30':
       case '6080008':
       case '6080009':
       case '6080010':
@@ -124,10 +125,14 @@ export class Order {
 
   address_google_link() {
     if (!this.pickup_store || !this.pickup_store.address) return '';
-    return `https://www.google.com/search?q=${this.pickup_store.address.replace(' ', '+').replace(',', '%2C')}`;
+    return `https://www.google.com/maps/place/${this.pickup_store.address.replace(' ', '+').replace(',', '%2C')}`;
   }
 
   shipping_string() {
     return this.shipping_type == 'std' ? 'Standard' : '2-Day';
+  }
+
+  address() {
+    return this.pickup_store ? this.pickup_store.address : '';
   }
 }

@@ -58,6 +58,10 @@
                       </small></p>
                   </div>
               </div>
+              <div>
+                <br>
+                <small><a href="{{ order.address_google_link() }}" target="_">{{ order.pickup_store.address }}</a></small>
+              </div>
             </div>
             <div class="col-1">
               <div><small>{{ order.amount.toFixed(2) }}</small></div>
