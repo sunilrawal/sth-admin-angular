@@ -60,7 +60,7 @@
               </div>
               <div>
                 <br>
-                <small><a href="{{ order.address_google_link() }}" target="_">{{ order.pickup_store.address }}</a></small>
+                <small><a href="{{ order.address_google_link() }}" target="_">{{ order.pickup_store ? order.pickup_store.address : '?' }}</a></small>
               </div>
             </div>
             <div class="col-1">

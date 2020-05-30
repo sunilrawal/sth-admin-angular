@@ -155,7 +155,7 @@ export class DashboardComponent implements OnInit {
       const len = ods ? ods.length : 0;
       for (let i = 0; i < len; i += 1) {
         const o = ods[i];
-        if (isToday) console.log(key + ' ' + new Date(o.date).toLocaleString());
+        //if (isToday) console.log(key + ' ' + new Date(o.date).toLocaleString());
         cumTotal += o.amount;
       }
 
