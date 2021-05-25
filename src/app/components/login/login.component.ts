@@ -27,6 +27,12 @@ export class LoginComponent implements OnInit {
   
 
   ngOnInit() {
+    const ok = localStorage.getItem('login');
+    console.log
+    if (ok === 'ok') {
+      this.loginService.loggedIn = true;
+      this.router.navigate(['/dashboard']);
+    }
   }
 
   onSubmit(loginData) {
@@ -36,6 +42,7 @@ export class LoginComponent implements OnInit {
 
     this.loginService.login(pwd, (success : boolean) => {
       if (success) {
+        localStorage.setItem('login', 'ok');
         this.router.navigate(['/dashboard']);
       } else {
         this.loginMessageDisplay = 'd-inline';

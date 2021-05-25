@@ -20,6 +20,9 @@ import { LoginComponent } from './components/login/login.component';
 import { LoginService } from './services/login.service';
 import { OrdersService } from './services/orders.service';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { ResearchComponent } from './components/research/research.component';
+
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   imports: [
@@ -28,12 +31,14 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
     ReactiveFormsModule,
     NgxChartsModule,
     BrowserAnimationsModule ,
+    NgbModule,
     RouterModule.forRoot([
       { path: '', component: LoginComponent },
       { path: 'dashboard', component: DashboardComponent },
       { path: 'sth', component: SthComponent },
       { path: 'walgreens', component: WalgreensComponent },
       { path: 'cvs', component: CvsComponent },
+      { path: 'research', component: ResearchComponent},
       { path: 'orders/:orderId', component: OrderComponent },
     ],
     { scrollPositionRestoration: 'enabled' })
@@ -48,6 +53,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
     CvsComponent,
     OrderComponent,
     LoginComponent,
+    ResearchComponent,
     MenuBarComponent
   ],
   bootstrap: [ AppComponent ],
