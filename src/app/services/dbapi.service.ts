@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -28,9 +29,27 @@ export class DBApiService {
   }
 
   baseUrl() {
-    return 'https://api.jpeglabs.com/v1';
+    return environment.baseUrl;
   }
   
+  async fetchOrderStats(fromDate: string, toDate: string) {
+    let url = `${this.baseUrl()}/order-stats?fromDate=${fromDate}&toDate=${toDate}`;
+    const requestOptions = {                                                                
+      headers: new HttpHeaders(this.headerDict()), 
+    };
+
+    return new Promise((resolve, reject) => {
+      this.http.get(url, requestOptions).subscribe(
+          data => {
+            resolve(data);
+          },
+          error => {
+            reject(error);
+          }
+        );
+    });
+
+  }
   fetchOrders(source, callback) {
     const dt = this.lastCheckOrders[source];
     if (dt && (new Date()).getTime() - dt.getTime() < 300000) {

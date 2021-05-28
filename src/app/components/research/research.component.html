@@ -1,4 +1,96 @@
-<p>
-  <ngb-datepicker #d></ngb-datepicker>
-  <input type="text" ngbDatepicker #d="ngbDatepicker"/>
-</p>
+<div class="row mt-4 d-flex justify-content-center">
+  <div class="col-3 mt-1 text-right">
+    <span class="mr-2">Start date</span>
+    <input type="text" ngbDatepicker #ds="ngbDatepicker" [(ngModel)]="startDate" />
+  </div>
+  <div class="col-1 text-left">
+    <button class="calendar" (click)="ds.toggle()" type="button"></button>
+  </div>
+  <div class="col-3 mt-1 text-right">
+    <span class="mr-2">End date</span>
+    <input type="text" ngbDatepicker #de="ngbDatepicker" [(ngModel)]="endDate" />
+  </div>
+  <div class="col-1 text-left">
+    <button class="calendar" (click)="de.toggle()" type="button"></button>
+  </div>
+  <div class="col-1 text-left pt-1"><button class="button" type="submit" (click)="loadData()">Go</button></div>
+</div>
+
+<div class="spinner-border" *ngIf="!hasData">
+  <span class="sr-only">Loading...</span>
+</div>
+
+<div class="mt-4 row d-flex justify-content-center" *ngIf="hasData">
+  <table class="col-6 table">
+    <thead class="thead-light">
+      <tr>
+        <th scope="col">Store</th>
+        <th># Orders (store/STH)</th>
+        <th>STH orders (%)</th>
+        <th>Sales (store/STH)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td scope="row"><strong>Walgreens</strong></td>
+        <td>{{ countTotals['store-Walgreens'] | number }} / {{ countTotals['sth-Walgreens'] | number }}</td>
+        <td>{{ countTotals['sth-Walgreens'] / (countTotals['store-Walgreens']+countTotals['sth-Walgreens']) | percent }}</td>
+        <td>{{ amountTotals['store-Walgreens'] | currency }} / {{ amountTotals['sth-Walgreens'] | currency }}</td>
+      </tr>
+      <tr>
+        <td scope="row"><strong>CVS</strong></td>
+        <td>{{ countTotals['store-CVS'] | number }} / {{ countTotals['sth-CVS'] | number }}</td>
+        <td>{{ countTotals['sth-CVS'] / (countTotals['store-CVS']+countTotals['sth-CVS']) | percent }}</td>
+        <td>{{ amountTotals['store-CVS'] | currency }} / {{ amountTotals['sth-CVS'] | currency }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="row d-flex justify-content-center">
+  <div class="col-4" class="panel-graph-totals">
+    <ngx-charts-line-chart *ngIf="hasData"
+      [view]="[500, 380]"
+      [scheme]="colorScheme"
+      [legend]=false
+      [showXAxisLabel]=false
+      [showYAxisLabel]=true
+      [xAxis]=true
+      [yAxis]=true
+      yAxisLabel="Walgreens orders/sales"
+      [timeline]=true
+      [results]="dailyData"
+    >
+      <ng-template #tooltipTemplate let-model="model">
+        <span class="graph-tooltip-text">{{ model.series}}: {{ model.value }} {{model.percent}}</span>
+      </ng-template>
+      <ng-template #seriesTooltipTemplate let-model="model">
+        <div class="graph-tooltip-text">{{ model[0].name }}</div>
+        <div *ngFor="let mod of model; let i = index">
+          <span class="graph-tooltip-text">{{ mod.series}}: {{ mod.value }} {{ mod.percent }}</span>
+        </div>
+      </ng-template>
+    </ngx-charts-line-chart>
+  </div>
+</div>
+<div class="mt-4 row d-flex justify-content-center" *ngIf="hasData">
+  <table class="col-7 table">
+    <thead class="thead-light">
+      <tr>
+        <th scope="col">Store</th>
+        <th>App</th>
+        <th scope="col"># Orders (store/STH)</th>
+        <th scope="col">Sales (store/STH)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let d of appData">
+        <td scope="row"><strong>{{ d.store }}</strong></td>
+        <td>{{ d.app }}</td>
+        <td>{{ d.count }} / {{ d.sth_count }} </td>
+        <td>{{ d.amount | currency }} / {{ d.sth_amount | currency }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+

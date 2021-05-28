@@ -1,5 +1,6 @@
 export const environment = {
-  production: true
+  production: true,
+  baseUrl: 'https://api.jpeglabs.com/v1'
 };
 
 
