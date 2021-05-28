@@ -67,18 +67,28 @@ export class ResearchComponent implements OnInit {
     this.appData = [];
 
     const sd = this.startDate;
-    const fromDate = `${sd.year}-${sd.month.toString().padStart(2, '0')}-${sd.day.toString().padStart(2, '0')}`;
+    const fromDate = `${sd.year}-${sd.month.toString().padStart(2, '0')}-${sd.day.toString().padStart(2, '0')} 00:00:00`;
     const ed = this.endDate;
-    const toDate = `${ed.year}-${ed.month.toString().padStart(2, '0')}-${ed.day.toString().padStart(2, '0')}`;
+    const toDate = `${ed.year}-${ed.month.toString().padStart(2, '0')}-${ed.day.toString().padStart(2, '0') } 23:59:59`;
     const data : any = await this.apiService.fetchOrderStats(fromDate, toDate);
+    console.log(data);
     this.appData = [];
 
+    const apps = {};
     const sthLookup = {};
-    data.sth.forEach(d => {
+    const storeLookup = {};
+    data.sth.forEach(d => { 
+      apps[d.app_name] = true; 
       sthLookup[d.app_name] = d;
     });
+    data.store.forEach(d => { 
+      apps[d.app_name] = true; 
+      storeLookup[d.app_name] = d;
+    });
 
-    data.store.forEach(d => {
+
+    Object.keys(apps).forEach(app_name => {
+      const d = app_name in storeLookup ? storeLookup[app_name] : {app_name, count:0, amount:0};
       const app = this.appLookup(d.app_name);
       const store = this.storeLookup(d.app_name);
       d.app = app;
@@ -108,16 +118,16 @@ export class ResearchComponent implements OnInit {
         d.sth_amount = 0;
       }
     });
-
     const dayCountSeriesData = [];
     const dayAmountSeriesData = [];
     data.days.forEach(d => {
-      dayCountSeriesData.push({name: d.md, value: d.count});
-      dayAmountSeriesData.push({name: d.md, value: d.amount});
+      const md = d.ymd.substring(2);
+      dayCountSeriesData.push({name: md, value: d.count});
+      dayAmountSeriesData.push({name: md, value: d.amount});
     });
     this.dailyData[0].series = dayCountSeriesData;
     this.dailyData[1].series = dayAmountSeriesData;
-    
+
     this.appData.sort((d1,d2) => d2.store.localeCompare(d1.store) || d2.amount-d1.amount);
     this.hasData = true;
   }

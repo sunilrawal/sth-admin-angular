@@ -34,13 +34,13 @@
       <tr>
         <td scope="row"><strong>Walgreens</strong></td>
         <td>{{ countTotals['store-Walgreens'] | number }} / {{ countTotals['sth-Walgreens'] | number }}</td>
-        <td>{{ countTotals['sth-Walgreens'] / (countTotals['store-Walgreens']+countTotals['sth-Walgreens']) | percent }}</td>
+        <td>{{ countTotals['sth-Walgreens'] / (countTotals['store-Walgreens']+countTotals['sth-Walgreens']) | percent:'1.2' }}</td>
         <td>{{ amountTotals['store-Walgreens'] | currency }} / {{ amountTotals['sth-Walgreens'] | currency }}</td>
       </tr>
       <tr>
         <td scope="row"><strong>CVS</strong></td>
         <td>{{ countTotals['store-CVS'] | number }} / {{ countTotals['sth-CVS'] | number }}</td>
-        <td>{{ countTotals['sth-CVS'] / (countTotals['store-CVS']+countTotals['sth-CVS']) | percent }}</td>
+        <td>{{ countTotals['sth-CVS'] / (countTotals['store-CVS']+countTotals['sth-CVS']) | percent:'1.2' }}</td>
         <td>{{ amountTotals['store-CVS'] | currency }} / {{ amountTotals['sth-CVS'] | currency }}</td>
       </tr>
     </tbody>
@@ -57,7 +57,7 @@
       [showYAxisLabel]=true
       [xAxis]=true
       [yAxis]=true
-      yAxisLabel="Walgreens orders/sales"
+      yAxisLabel="Walgreens sales ($)"
       [timeline]=true
       [results]="dailyData"
     >
