@@ -177,6 +177,7 @@ export class DashboardComponent implements OnInit {
       this.countResults[app] = this.setupGraph(app, 'OrderCountDay', false);
       this.profitResults[app] = this.setupGraph(app, 'OrderAmountDay', true);
     }
+
     this.totalResults = this.setupTotals('OrderAmountDay');
     const profitSeries = [];
     const shPtr = this.totalResults[1].series;
@@ -311,7 +312,7 @@ export class DashboardComponent implements OnInit {
       const sth7 = sths[day7Before];
       const total7 = store7 + sth7;
       const percent7 = (100*(total7-total)/total);
-      total7Series.push({ name: day, value: total7.toFixed(0) });
+      total7Series.push({ name: day, value: isNaN(total7) ? 0 : total7.toFixed(0) });
 
       const tPercent = -percent7;
       const pm = tPercent >= 0 ? '+' : '';

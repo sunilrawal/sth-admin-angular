@@ -27,11 +27,15 @@ export class LoginComponent implements OnInit {
   
 
   ngOnInit() {
-    const ok = localStorage.getItem('login');
-    console.log
-    if (ok === 'ok') {
+    const userStatus = localStorage.getItem('jpeg-login');
+    if (userStatus === 'admin') {
       this.loginService.loggedIn = true;
-      this.router.navigate(['/dashboard']);
+      this.loginService.isSuperAdmin = false;
+      this.router.navigate(['/sth']);
+    } else if (userStatus === 'superadmin') {
+        this.loginService.loggedIn = true;
+        this.loginService.isSuperAdmin = true;
+        this.router.navigate(['/dashboard']);
     }
   }
 
@@ -42,8 +46,10 @@ export class LoginComponent implements OnInit {
 
     this.loginService.login(pwd, (success : boolean) => {
       if (success) {
-        localStorage.setItem('login', 'ok');
-        this.router.navigate(['/dashboard']);
+        const userStatus = this.loginService.isSuperAdmin ? 'superadmin' : 'admin';
+        localStorage.setItem('jpeg-login', userStatus);
+        if (this.loginService.isSuperAdmin) this.router.navigate(['/dashboard']);
+        else this.router.navigate(['/sth']);
       } else {
         this.loginMessageDisplay = 'd-inline';
       }

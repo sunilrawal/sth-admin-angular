@@ -8,14 +8,16 @@ import { DBApiService } from '../services/dbapi.service';
 export class LoginService {
 
   loggedIn = false;
+  isSuperAdmin = false;
 
   constructor(
     private dbapi : DBApiService,
   ) { }
 
   login(pwd, callback) {
-    this.dbapi.fetchLogin(pwd, (status) => {
+    this.dbapi.fetchLogin(pwd, (status, isSuperAdmin) => {
       this.loggedIn = status;
+      this.isSuperAdmin = isSuperAdmin;
       callback(status);
     });
   }
@@ -23,4 +25,5 @@ export class LoginService {
   isLoggedIn() {
     return this.loggedIn;
   }
+
 }
