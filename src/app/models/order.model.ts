@@ -79,10 +79,13 @@ export class Order {
       case 'PRGift;5812':
       case 'PRGift;5136':
       case 'PRGift;5137':
+      case 'PRGift;5138':
       case '6080013':
       case '6080015':
       case '6080016':
-      case 'PRGift;5138':
+      case 'PRGift;6638':
+      case 'PRGift;6639':
+      case 'PRGift;6642':
         return 'Canvas';
       default:
         console.log(`**${productId}**`)
