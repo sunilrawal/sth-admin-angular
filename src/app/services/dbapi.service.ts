@@ -102,6 +102,7 @@ export class DBApiService {
         const key = `${q}/${source}/${tableName}`;
         const dt = this.lastCheckStats[key];
         if (dt && (new Date()).getTime() - dt.getTime() < 300000) {
+          console.log('...data already available');
             callback({});
             return;
         }
@@ -116,9 +117,11 @@ export class DBApiService {
         console.log(`fetchStats: ${url}`);
         this.http.get(url, requestOptions).subscribe(
             data => {
+              console.log(data)
                 callback(data['results']);
             },
             error => {
+              console.log(`Error calling ${url}`)
                 console.log(error);
                 callback({});
             }

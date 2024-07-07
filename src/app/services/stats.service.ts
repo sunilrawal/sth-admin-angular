@@ -46,7 +46,7 @@ export class StatsService {
 
   async fetchStats(q, source, tableName) {
     console.log(`Fetching stats for ${q}/${source}/${tableName}`);
-    return new Promise((resolve) => {
+    return new Promise<void>((resolve) => {
       this.dbapi.fetchStats(q, source, tableName, (stats) => {
         if (!stats || Object.keys(stats).length == 0) { 
           console.log(`Empty response for ${q}/${source}/${tableName}. Ignoring`);
