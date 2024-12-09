@@ -34,7 +34,7 @@
     "ladda": "^2.0.1",
     "marked": "~0.8.0",
     "masonry-layout": "~4.2.1",
-    "moment": "~2.24.0",
+    "moment": "~2.29.4",
     "moment-timezone": "0.5.31",
     "numeral": "~2.0.6",
     "plyr": "~3.5.6",
