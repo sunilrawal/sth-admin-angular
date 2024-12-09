@@ -29,7 +29,7 @@
     "fast-xml-parser": "^3.19.0",
     "get-root-node-polyfill": "^1.0.0",
     "hammerjs": "~2.0.8",
-    "highlight.js": "~9.15.6",
+    "highlight.js": "~10.4.1",
     "intl": "~1.2.5",
     "ladda": "^2.0.1",
     "marked": "~0.8.0",
