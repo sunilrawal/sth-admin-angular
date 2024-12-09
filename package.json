@@ -71,7 +71,7 @@
     "@types/node": "^12.11.1",
     "@types/numeral": "~0.0.22",
     "codelyzer": "^5.1.2",
-    "node-sass": "~4.13.1",
+    "node-sass": "~7.0.0",
     "tslint": "~5.18.0",
     "typescript": "~3.7.5",
     "@types/jasmine": "~3.5.0",
